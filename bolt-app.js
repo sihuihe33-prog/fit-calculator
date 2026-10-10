@@ -290,14 +290,14 @@ function renderSummary(r) {
   const i = r.input;
   const mu = i.muG === i.muK ? `μG=μK=${fmtMu(i.muG)}` : `μG=${fmtMu(i.muG)}, μK=${fmtMu(i.muK)}`;
   el.summary.textContent =
-    `${i.size} ${i.cls}, ${i.head}, ${mu}, ν=${fmtNu(i.nu * 100)}% → ` +
+    `${i.size} ${i.cls}, ${t('head' + i.head)}, ${mu}, ν=${fmtNu(i.nu * 100)}% → ` +
     `M_A = ${fmt(r.torque, 1)} N·m, F_M = ${fmt(r.preload / 1000, 1)} kN`;
 }
 
 function renderRef(r) {
   const i = r.input;
   el.refNote.textContent = t('refNote')
-    .replace('{cls}', i.cls).replace('{head}', i.head)
+    .replace('{cls}', i.cls).replace('{head}', t('head' + i.head))
     .replace('{g}', fmtMu(i.muG)).replace('{k}', fmtMu(i.muK)).replace('{nu}', fmtNu(i.nu * 100));
   const rows = [];
   for (const th of THREADS) {
