@@ -1,4 +1,4 @@
-# ISO Fit Calculator
+# Mechanical Design Toolbox
 
 A free, fast, ad-free calculator for ISO 286 hole/shaft tolerances and fits (clearance / transition / interference).
 
@@ -21,6 +21,14 @@ A free, fast, ad-free calculator for ISO 286 hole/shaft tolerances and fits (cle
 - Friction presets or custom μG / μK, adjustable yield utilization
 - Torque breakdown (bolt stretch vs. thread friction vs. head friction) and a quick-reference table
 
+### More tools
+
+- **Spur gears** (`/gear`): geometry with profile shift, working pressure angle, contact ratio, span measurement, undercut / pointed-tip checks
+- **Shaft strength** (`/shaft`): minimum diameter from torsion (with keyway allowance, hollow shafts) and combined bending–torsion check
+- **Bearing life** (`/bearing`): equivalent dynamic load, L10 / L10h, reliability factor, required dynamic load rating
+- **Parallel keys** (`/key`): GB/T 1095/1096 key size lookup, bearing-pressure check, drawing callouts
+- **Unit converter** (`/units`): force, torque, stress, power, speed, temperature and more, plus a power–torque–speed calculator
+
 ## Example
 
 Ø25 H7/g6:
@@ -33,7 +41,8 @@ A free, fast, ad-free calculator for ISO 286 hole/shaft tolerances and fits (cle
 
 Plain HTML/CSS/JavaScript ES modules. No build step, no dependencies.
 
-- Calculation engines: `iso286.js` (fits), `bolt.js` (bolt torque)
+- Shared site shell: `site.js` (tool registry, language, navigation)
+- Calculation engines: `iso286.js`, `bolt.js`, `gear.js`, `shaft.js`, `bearing.js`, `key.js`, `units.js` — one per tool, no DOM
 - Tests: `test/`, run with `node --test`
 
 ## Run locally

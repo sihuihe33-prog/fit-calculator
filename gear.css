@@ -1,0 +1,50 @@
+/* ---- 齿轮计算页专用样式（共用变量来自 style.css） ---- */
+.gear-inputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.gear-row2 { margin-top: 12px; }
+
+.gear-notes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.gear-notes:empty { display: none; }
+.gear-notes li {
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: .9rem;
+  border-left: 3px solid currentColor;
+}
+.gear-notes li b { font-weight: 700; margin-right: 4px; }
+.gear-notes .n-error { color: var(--interference); background: var(--interference-bg); }
+.gear-notes .n-warn { color: var(--transition); background: var(--transition-bg); }
+.gear-notes .n-info { color: var(--muted); background: var(--surface-2); }
+
+.gear-table { margin-top: 16px; }
+.gear-table thead .th-p1 { color: var(--hole); }
+.gear-table thead .th-p2 { color: var(--shaft); }
+.gear-table td:first-child { font-family: var(--sans); }
+.gear-table td:first-child .sym { font-family: var(--mono); font-size: .82rem; margin-left: 4px; white-space: nowrap; }
+
+.gear-h3 { margin: 20px 0 8px; font-size: .95rem; }
+.gear-pair { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.gear-pair .metric .m-val { font-size: 1rem; }
+
+.gear-sketch svg { display: block; width: 100%; height: auto; max-height: 380px; }
+.gear-sketch .c-tip { fill: none; stroke-width: 1.2; stroke-dasharray: 5 4; }
+.gear-sketch .c-pitch { stroke-width: 1.8; }
+.gear-sketch .c-root { fill: none; stroke-width: .8; opacity: .55; }
+.gear-sketch .g1 { stroke: var(--hole); }
+.gear-sketch .g2 { stroke: var(--shaft); }
+.gear-sketch .c-pitch.g1 { fill: var(--hole-fill); }
+.gear-sketch .c-pitch.g2 { fill: var(--shaft-fill); }
+.gear-sketch .axis { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 8 3 2 3; }
+.gear-sketch .dim { stroke: var(--text); stroke-width: 1; }
+.gear-sketch .ctr { fill: var(--text); }
+.gear-sketch text { font-family: var(--mono); font-size: 13px; fill: var(--text); }
+.gear-sketch text.t1 { fill: var(--hole); font-weight: 700; }
+.gear-sketch text.t2 { fill: var(--shaft); font-weight: 700; }
+.gear-sketch .halo { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.gear-legend { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--muted); font-size: .8rem; }
+
+@media (max-width: 640px) {
+  .gear-inputs { grid-template-columns: 1fr 1fr; }
+  .gear-pair { grid-template-columns: 1fr 1fr; }
+  /* 手机上 SVG 被缩小约一半，放大字号保证可读 */
+  .gear-sketch text { font-size: 22px; }
+}

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parallel Key Calculator — GB/T 1096 Key Size &amp; Strength Check</title>
+<meta name="description" content="Free parallel key calculator: pick the GB/T 1095/1096 key size b×h and keyway depths from the shaft diameter, suggest a standard key length and check bearing pressure. Drawing callouts included.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Parallel Key Calculator — GB/T 1096 Key Size &amp; Strength Check">
+<meta property="og:description" content="Key size, keyway depths, standard length and bearing-pressure check for ordinary parallel keys (GB/T 1095/1096). Fast, free, works offline.">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="key.css">
+<script>
+  // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem('fitcalc-lang'); } catch (e) {}
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+    if (l === 'zh') {
+      var h = document.documentElement;
+      h.classList.add('i18n-pending');
+      setTimeout(function () { h.classList.remove('i18n-pending'); }, 1500);
+    }
+  })();
+</script>
+<script type="module" src="key-app.js"></script>
+</head>
+<body data-tool="key">
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
+      <div>
+        <h1 data-i18n="h1">Parallel Key Calculator</h1>
+        <p class="sub" data-i18n="subtitle">Key size and bearing-pressure check per GB/T 1095 / 1096</p>
+      </div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
+
+  <main>
+    <section class="card" aria-labelledby="inputs-h">
+      <h2 id="inputs-h" class="visually-hidden" data-i18n="inputsTitle">Inputs</h2>
+      <div class="key-grid">
+        <div class="field">
+          <label for="d" data-i18n="dLabel">Shaft diameter d (mm)</label>
+          <input id="d" type="number" inputmode="decimal" step="any" min="6" max="130" value="50" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="size" data-i18n="sizeLabel">Key b × h</label>
+          <select id="size"></select>
+        </div>
+        <div class="field">
+          <label for="type" data-i18n="typeLabel">Key type</label>
+          <select id="type"></select>
+        </div>
+        <div class="field">
+          <label for="keys" data-i18n="keysLabel">Number of keys</label>
+          <select id="keys"></select>
+        </div>
+      </div>
+
+      <div class="key-grid key-grid-load">
+        <div class="field">
+          <label for="mode" data-i18n="modeLabel">Load given as</label>
+          <select id="mode"></select>
+        </div>
+        <div class="field" id="f-T">
+          <label for="T" data-i18n="TLabel">Torque T (N·m)</label>
+          <input id="T" type="number" inputmode="decimal" step="any" min="0" value="500" autocomplete="off">
+        </div>
+        <div class="field" id="f-P" hidden>
+          <label for="P" data-i18n="PLabel">Power P (kW)</label>
+          <input id="P" type="number" inputmode="decimal" step="any" min="0" value="7.5" autocomplete="off">
+        </div>
+        <div class="field" id="f-n" hidden>
+          <label for="n" data-i18n="nLabel">Speed n (r/min)</label>
+          <input id="n" type="number" inputmode="decimal" step="any" min="0" value="960" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="key-grid">
+        <div class="field">
+          <label for="B" data-i18n="BLabel">Hub length B (mm)</label>
+          <input id="B" type="number" inputmode="decimal" step="any" min="0" value="80" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="L" data-i18n="LLabel">Key length L (mm)</label>
+          <select id="L"></select>
+        </div>
+        <div class="field">
+          <label for="preset" data-i18n="presetLabel">Hub material &amp; load</label>
+          <select id="preset"></select>
+        </div>
+        <div class="field">
+          <label for="allow" data-i18n="allowLabel">[σ<sub>p</sub>] (MPa)</label>
+          <input id="allow" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" id="hint"></p>
+      <div class="err" id="err" role="alert"></div>
+    </section>
+
+    <section class="card" id="results" aria-labelledby="results-h" aria-live="polite">
+      <div class="results-head">
+        <h2 id="results-h" data-i18n="resultsTitle">Results</h2>
+        <span class="badge" id="badge"></span>
+      </div>
+      <div id="results-body">
+        <div class="big-row">
+          <div class="big">
+            <div class="m-label" data-i18n="keyLabel">Key b × h × L</div>
+            <div class="big-val"><span id="r-key">–</span><small>mm</small></div>
+          </div>
+          <div class="big">
+            <div class="m-label" data-i18n="sigmaLabel">Bearing pressure σ<sub>p</sub></div>
+            <div class="big-val"><span id="r-sigma">–</span><small>MPa</small></div>
+          </div>
+        </div>
+
+        <div class="util">
+          <div class="util-head">
+            <span data-i18n="utilLabel">Utilization σ<sub>p</sub> / [σ<sub>p</sub>]</span>
+            <b id="r-util"></b>
+          </div>
+          <div class="util-bar" id="util-bar" role="img"><span id="util-fill"></span></div>
+        </div>
+
+        <div class="key-metrics">
+          <div class="metric"><div class="m-label" data-i18n="tLabel">Shaft keyway depth t</div><div class="m-val" id="r-t"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="t1Label">Hub keyway depth t<sub>1</sub></div><div class="m-val" id="r-t1"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="lLabel">Working length l</div><div class="m-val" id="r-l"></div><div class="m-um" id="r-l2"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="lReqLabel">Required l</div><div class="m-val" id="r-lreq"></div><div class="m-um" id="r-lreq2"></div></div>
+        </div>
+
+        <div class="notes" id="notes"></div>
+
+        <h3 class="key-h3" data-i18n="reqTitle">Minimum key length for [σ<sub>p</sub>]</h3>
+        <div class="table-wrap">
+          <table class="data key-req">
+            <thead>
+              <tr>
+                <th scope="col" data-i18n="thType">Type</th>
+                <th scope="col" data-i18n="thRule">Working length</th>
+                <th scope="col" data-i18n="thLreq">Required L</th>
+                <th scope="col" data-i18n="thLstd">Standard L</th>
+              </tr>
+            </thead>
+            <tbody id="req-body"></tbody>
+          </table>
+        </div>
+
+        <div class="key-figure">
+          <h3 class="key-h3" data-i18n="figTitle">Cross-section</h3>
+          <div class="key-svg" id="svg"></div>
+        </div>
+
+        <div class="summary">
+          <div class="summary-label" data-i18n="calloutTitle">Drawing callouts</div>
+          <div class="summary-row">
+            <pre id="summary" class="summary-text callout"></pre>
+            <button type="button" id="copy" class="btn" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card about" aria-labelledby="about-h">
+      <h2 id="about-h" data-i18n="aboutTitle">How it is calculated</h2>
+      <div id="about" data-i18n-html="aboutBody"></div>
+      <p class="disclaimer" data-i18n="disclaimer">Check against the current GB/T 1095/1096 tables before manufacturing.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span data-i18n="footerText">Open source, runs entirely in your browser.</span>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener" data-i18n="footerLink">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

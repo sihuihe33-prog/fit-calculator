@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bearing Life Calculator — L10 Rating Life &amp; Equivalent Dynamic Load</title>
+<meta name="description" content="Free rolling bearing life calculator: equivalent dynamic load P, basic rating life L10 and L10h per ISO 281, required dynamic load rating C′, load, temperature and reliability factors.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bearing Life Calculator — L10 Rating Life &amp; Equivalent Dynamic Load">
+<meta property="og:description" content="Equivalent dynamic load, L10 / L10h rating life and required load rating C′ for ball and roller bearings (ISO 281 basic method). Fast, free, works offline.">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="bearing.css">
+<script>
+  // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem('fitcalc-lang'); } catch (e) {}
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+    if (l === 'zh') {
+      var h = document.documentElement;
+      h.classList.add('i18n-pending');
+      setTimeout(function () { h.classList.remove('i18n-pending'); }, 1500);
+    }
+  })();
+</script>
+<script type="module" src="bearing-app.js"></script>
+</head>
+<body data-tool="bearing">
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
+      <div>
+        <h1 data-i18n="h1">Bearing Life Calculator</h1>
+        <p class="sub" data-i18n="subtitle">Equivalent dynamic load and L10 rating life (ISO 281)</p>
+      </div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
+
+  <main>
+    <section class="card" aria-labelledby="inputs-h">
+      <h2 id="inputs-h" class="visually-hidden" data-i18n="inputsTitle">Inputs</h2>
+      <div class="brg-grid">
+        <div class="field">
+          <label for="type" data-i18n="typeLabel">Bearing type</label>
+          <select id="type"></select>
+        </div>
+        <div class="field">
+          <label for="C" data-i18n="cLabel">Dynamic load rating C (kN)</label>
+          <input id="C" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="n" data-i18n="nLabel">Speed n (r/min)</label>
+          <input id="n" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="rel" data-i18n="relLabel">Reliability</label>
+          <select id="rel"></select>
+        </div>
+      </div>
+
+      <h3 class="brg-sub" data-i18n="loadTitle">Loads and factors X, Y</h3>
+      <div class="brg-grid brg-grid-xy">
+        <div class="field">
+          <label for="xy" data-i18n="xyLabel">X, Y factors</label>
+          <select id="xy"></select>
+        </div>
+        <div class="field">
+          <label for="Fr" data-i18n="frLabel">Radial load Fr (kN)</label>
+          <input id="Fr" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="Fa" data-i18n="faLabel">Axial load Fa (kN)</label>
+          <input id="Fa" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+        <div class="field" id="C0-field">
+          <label for="C0" data-i18n="c0Label">Static rating C0 (kN)</label>
+          <input id="C0" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+      </div>
+      <div class="brg-grid">
+        <div class="field">
+          <label for="X" data-i18n="xLabel">Radial factor X</label>
+          <input id="X" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="Y" data-i18n="yLabel">Axial factor Y</label>
+          <input id="Y" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" id="xy-hint" aria-live="polite"></p>
+      <details class="brg-help">
+        <summary data-i18n="xyHelpTitle">How to get X and Y from the catalogue</summary>
+        <div data-i18n-html="xyHelpBody"></div>
+        <div class="brg-table-wrap">
+          <table class="brg-tab" id="dgbb-table" aria-describedby="dgbb-cap"></table>
+        </div>
+        <p class="hint" id="dgbb-cap" data-i18n="dgbbCaption"></p>
+      </details>
+
+      <h3 class="brg-sub" data-i18n="factorTitle">Operating conditions</h3>
+      <div class="brg-grid brg-grid-2">
+        <div class="field">
+          <label for="fpPreset" data-i18n="fpPresetLabel">Load condition</label>
+          <select id="fpPreset"></select>
+        </div>
+        <div class="field">
+          <label for="fp" data-i18n="fpLabel">Load factor fp</label>
+          <input id="fp" type="number" inputmode="decimal" step="0.05" min="1" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="ft" data-i18n="ftLabel">Temperature factor ft</label>
+          <select id="ft"></select>
+        </div>
+      </div>
+      <p class="hint" id="fp-hint"></p>
+
+      <div class="brg-grid brg-grid-life brg-block">
+        <div class="field">
+          <label for="lhPreset" data-i18n="lhPresetLabel">Application (guide)</label>
+          <select id="lhPreset"></select>
+        </div>
+        <div class="field">
+          <label for="Lh" data-i18n="lhLabel">Required life Lh′ (h)</label>
+          <input id="Lh" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" id="lh-hint"></p>
+      <div class="err" id="err" role="alert"></div>
+    </section>
+
+    <section class="card" id="results" aria-labelledby="results-h" aria-live="polite">
+      <div class="results-head">
+        <h2 id="results-h" data-i18n="resultsTitle">Results</h2>
+        <span class="badge" id="badge"></span>
+      </div>
+      <div id="results-body">
+        <div class="big-row">
+          <div class="big">
+            <div class="m-label" data-i18n="pLabel">Equivalent dynamic load P</div>
+            <div class="big-val"><span id="r-P">–</span><small>kN</small></div>
+          </div>
+          <div class="big">
+            <div class="m-label" id="r-life-label"></div>
+            <div class="big-val"><span id="r-life">–</span><small>h</small></div>
+          </div>
+        </div>
+        <div class="sec-grid brg-sec">
+          <div class="metric"><div class="m-label" id="r-L-label"></div><div class="m-val" id="r-L"></div><div class="m-um" id="r-L2"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="y8Label">Years at 8 h/day</div><div class="m-val" id="r-y8"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="y24Label">Years at 24 h/day</div><div class="m-val" id="r-y24"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="creqLabel">Required C′</div><div class="m-val" id="r-creq"></div><div class="m-um" id="r-creq2"></div></div>
+        </div>
+
+        <div class="brg-ratio">
+          <div class="brg-ratio-head">
+            <span id="r-ratio-label"></span>
+            <b id="r-ratio"></b>
+          </div>
+          <div class="brg-bar" id="bar" role="img"><span id="bar-fill"></span></div>
+          <div class="brg-scale"><span>0</span><span>1.0</span><span>≥ 2.0</span></div>
+        </div>
+
+        <div class="summary">
+          <div class="summary-label" data-i18n="summaryTitle">Summary</div>
+          <div class="summary-row">
+            <code id="summary" class="summary-text"></code>
+            <button type="button" id="copy" class="btn" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card about" aria-labelledby="about-h">
+      <h2 id="about-h" data-i18n="aboutTitle">How it is calculated</h2>
+      <div id="about" data-i18n-html="aboutBody"></div>
+      <p class="disclaimer" data-i18n="disclaimer">Basic rating life per ISO 281 basic method; modified life (aISO), static load check and lubrication effects are not included.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span data-i18n="footerText">Open source, runs entirely in your browser.</span>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener" data-i18n="footerLink">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

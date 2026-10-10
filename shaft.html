@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shaft Diameter &amp; Strength Calculator — Torsion and Combined Bending–Torsion</title>
+<meta name="description" content="Free shaft design calculator: minimum shaft diameter from torsional strength d ≥ A0·∛(P/n) with keyway allowance and hollow shafts, plus a combined bending–torsion check (third strength theory) with section modulus and keyways.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Shaft Diameter &amp; Strength Calculator — Torsion and Combined Bending–Torsion">
+<meta property="og:description" content="Estimate the minimum shaft diameter from power and speed, then check a section under combined bending and torsion. Textbook method, bilingual EN/中文, works offline.">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="shaft.css">
+<script>
+  // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem('fitcalc-lang'); } catch (e) {}
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+    if (l === 'zh') {
+      var h = document.documentElement;
+      h.classList.add('i18n-pending');
+      setTimeout(function () { h.classList.remove('i18n-pending'); }, 1500);
+    }
+  })();
+</script>
+<script type="module" src="shaft-app.js"></script>
+</head>
+<body data-tool="shaft">
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
+      <div>
+        <h1 data-i18n="h1">Shaft Strength Calculator</h1>
+        <p class="sub" data-i18n="subtitle">Minimum diameter from torsion, combined bending–torsion check</p>
+      </div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
+
+  <main>
+    <!-- 第一部分：按扭转强度估算最小轴径 -->
+    <section class="card" id="est" aria-labelledby="est-h">
+      <h2 id="est-h" data-i18n="estTitle">1 · Minimum diameter from torsional strength</h2>
+      <div class="sh-grid sh-grid-4">
+        <div class="field">
+          <label for="P" data-i18n="pLabel">Power P (kW)</label>
+          <input id="P" type="number" inputmode="decimal" step="any" min="0" value="10" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="n" data-i18n="nLabel">Speed n (r/min)</label>
+          <input id="n" type="number" inputmode="decimal" step="any" min="0" value="960" autocomplete="off">
+        </div>
+        <div class="field sh-span2">
+          <label for="mat" data-i18n="matLabel">Shaft material</label>
+          <select id="mat"></select>
+        </div>
+        <div class="field">
+          <label for="A0" data-i18n="a0Label">Coefficient A<sub>0</sub></label>
+          <input id="A0" type="number" inputmode="decimal" step="1" min="50" max="200" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sec1" data-i18n="secLabel">Cross-section</label>
+          <select id="sec1"></select>
+        </div>
+        <div class="field">
+          <label for="beta1" data-i18n="betaLabel">β = d<sub>i</sub>/d (hollow)</label>
+          <input id="beta1" type="number" inputmode="decimal" step="0.05" min="0" max="0.9" value="0.5" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="kw1" data-i18n="kwLabel">Keyways at this section</label>
+          <select id="kw1"></select>
+        </div>
+      </div>
+      <p class="hint" id="mat-hint"></p>
+      <p class="hint" data-i18n="a0Hint">Use a larger A<sub>0</sub> when bending is relatively large; a smaller A<sub>0</sub> when bending is small or the shaft only transmits torque.</p>
+      <div class="err" id="err1" role="alert"></div>
+
+      <div id="est-body" class="sh-results" aria-live="polite">
+        <div class="big-row">
+          <div class="big">
+            <div class="m-label" data-i18n="dStdLabel">Suggested diameter</div>
+            <div class="big-val"><span id="r-dstd">–</span><small>mm</small></div>
+            <div class="m-um" id="r-dstd-note"></div>
+          </div>
+          <div class="big">
+            <div class="m-label" data-i18n="tLabel">Torque T</div>
+            <div class="big-val"><span id="r-T">–</span><small>N·mm</small></div>
+            <div class="m-um" id="r-T-nm"></div>
+          </div>
+        </div>
+        <div class="sh-metrics">
+          <div class="metric"><div class="m-label" data-i18n="dRawLabel">d<sub>min</sub> from torsion</div><div class="m-val" id="r-draw"></div><div class="m-um" id="r-draw-note"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="dKeyLabel">After keyway allowance</div><div class="m-val" id="r-dkey"></div><div class="m-um" id="r-dkey-note"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="tauLabel">[τ<sub>T</sub>] implied by A<sub>0</sub></div><div class="m-val" id="r-tau"></div></div>
+        </div>
+        <p class="hint" data-i18n="roundRule">Rounding rule: round up to the next whole millimetre for d ≤ 50 mm, to the next multiple of 5 mm above 50 mm. The final diameter is usually set by the bearing, coupling or hub bore.</p>
+        <div class="summary">
+          <div class="summary-label" data-i18n="summaryTitle">Summary</div>
+          <div class="summary-row">
+            <code id="summary1" class="summary-text"></code>
+            <button type="button" id="copy1" class="btn" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+        <p class="sh-send"><button type="button" id="send-t" class="btn sh-btn-ghost" data-i18n="sendT">Use this T and d in the check ↓</button></p>
+      </div>
+    </section>
+
+    <!-- 第二部分：按弯扭合成强度校核 -->
+    <section class="card" id="chk" aria-labelledby="chk-h">
+      <h2 id="chk-h" data-i18n="chkTitle">2 · Check by combined bending and torsion</h2>
+      <div class="sh-grid sh-grid-4">
+        <div class="field">
+          <label for="mmode" data-i18n="mmodeLabel">Bending moment input</label>
+          <select id="mmode"></select>
+        </div>
+        <div class="field" id="f-Mh">
+          <label for="Mh" data-i18n="mhLabel">M<sub>H</sub> horizontal (N·m)</label>
+          <input id="Mh" type="number" inputmode="decimal" step="any" value="120" autocomplete="off">
+        </div>
+        <div class="field" id="f-Mv">
+          <label for="Mv" data-i18n="mvLabel">M<sub>V</sub> vertical (N·m)</label>
+          <input id="Mv" type="number" inputmode="decimal" step="any" value="160" autocomplete="off">
+        </div>
+        <div class="field" id="f-M" hidden>
+          <label for="M" data-i18n="mLabel">Resultant M (N·m)</label>
+          <input id="M" type="number" inputmode="decimal" step="any" min="0" value="200" autocomplete="off">
+        </div>
+      </div>
+      <div class="sh-grid sh-grid-4">
+        <div class="field">
+          <label for="T2" data-i18n="t2Label">Torque T (N·m)</label>
+          <input id="T2" type="number" inputmode="decimal" step="any" min="0" value="300" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="alphaSel" data-i18n="alphaSelLabel">Torsion stress type</label>
+          <select id="alphaSel"></select>
+        </div>
+        <div class="field">
+          <label for="alpha" data-i18n="alphaLabel">Correction factor α</label>
+          <input id="alpha" type="number" inputmode="decimal" step="0.05" min="0.05" max="1" value="0.6" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="d2" data-i18n="d2Label">Section diameter d (mm)</label>
+          <input id="d2" type="number" inputmode="decimal" step="any" min="0" value="40" autocomplete="off">
+        </div>
+      </div>
+      <div class="sh-grid sh-grid-4">
+        <div class="field">
+          <label for="sec2" data-i18n="secLabel">Cross-section</label>
+          <select id="sec2"></select>
+        </div>
+        <div class="field">
+          <label for="beta2" data-i18n="betaLabel">β = d<sub>i</sub>/d (hollow)</label>
+          <input id="beta2" type="number" inputmode="decimal" step="0.05" min="0" max="0.9" value="0.5" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="kw2" data-i18n="kw2Label">Keyway at the section</label>
+          <select id="kw2"></select>
+        </div>
+        <div class="field sh-key">
+          <div class="sh-key-row">
+            <div>
+              <label for="kb" data-i18n="kbLabel">Key width b (mm)</label>
+              <input id="kb" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+            </div>
+            <div>
+              <label for="kt" data-i18n="ktLabel">Depth t (mm)</label>
+              <input id="kt" type="number" inputmode="decimal" step="any" min="0" autocomplete="off">
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="hint" id="key-hint"></p>
+      <div class="sh-grid sh-grid-allow">
+        <div class="field">
+          <label for="amat" data-i18n="amatLabel">[σ<sub>−1</sub>] preset (typical textbook values)</label>
+          <select id="amat"></select>
+        </div>
+        <div class="field">
+          <label for="allow" data-i18n="allowLabel">Allowable [σ<sub>−1</sub>] (MPa)</label>
+          <input id="allow" type="number" inputmode="decimal" step="any" min="0" value="60" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" data-i18n="allowHint">Presets are approximate typical values — check the [σ<sub>−1</sub>] table in your textbook or design handbook.</p>
+      <div class="err" id="err2" role="alert"></div>
+
+      <div id="chk-body" class="sh-results" aria-live="polite">
+        <div class="results-head">
+          <h3 class="sh-h3" data-i18n="chkResults">Result</h3>
+          <span class="badge" id="badge"></span>
+        </div>
+        <div class="big-row">
+          <div class="big">
+            <div class="m-label" data-i18n="sigmaLabel">Combined stress σ<sub>ca</sub></div>
+            <div class="big-val"><span id="r-sigma">–</span><small>MPa</small></div>
+            <div class="m-um" id="r-sigma-note"></div>
+          </div>
+          <div class="big">
+            <div class="m-label" data-i18n="dReqLabel">Required d (solid section)</div>
+            <div class="big-val"><span id="r-dreq">–</span><small>mm</small></div>
+            <div class="m-um" id="r-dreq-note"></div>
+          </div>
+        </div>
+        <div class="sh-util">
+          <div class="sh-util-head"><span data-i18n="utilLabel">Utilization σ<sub>ca</sub> / [σ<sub>−1</sub>]</span><b id="r-util"></b></div>
+          <div class="sh-bar" id="bar" role="meter" aria-valuemin="0" aria-valuemax="150"><span id="bar-fill"></span><i class="sh-bar-limit"></i></div>
+        </div>
+        <div class="sh-metrics sh-metrics-4">
+          <div class="metric"><div class="m-label" data-i18n="mResLabel">Resultant M</div><div class="m-val" id="r-M"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="aTLabel">αT</div><div class="m-val" id="r-aT"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="mcaLabel">M<sub>ca</sub> = √(M² + (αT)²)</div><div class="m-val" id="r-Mca"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="wLabel">Section modulus W</div><div class="m-val" id="r-W"></div><div class="m-um" id="r-W-note"></div></div>
+        </div>
+        <div class="summary">
+          <div class="summary-label" data-i18n="summaryTitle">Summary</div>
+          <div class="summary-row">
+            <code id="summary2" class="summary-text"></code>
+            <button type="button" id="copy2" class="btn" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card about" aria-labelledby="about-h">
+      <h2 id="about-h" data-i18n="aboutTitle">How it is calculated</h2>
+      <div id="about" data-i18n-html="aboutBody"></div>
+      <p class="disclaimer" data-i18n="disclaimer">Simplified textbook method — fatigue safety-factor check (with stress concentration, size and surface factors) is not included yet.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span data-i18n="footerText">Open source, runs entirely in your browser.</span>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener" data-i18n="footerLink">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

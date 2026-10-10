@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spur Gear Calculator — Geometry, Profile Shift, Contact Ratio</title>
+<meta name="description" content="Free spur gear calculator: reference, base, tip and root diameters, profile shift, working centre distance and pressure angle, contact ratio, span measurement Wk and undercut checks for involute gears (ISO / GB basic rack).">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spur Gear Calculator — Geometry, Profile Shift, Contact Ratio">
+<meta property="og:description" content="External spur gear pair geometry with profile shift: diameters, tooth thickness, base tangent length, working centre distance, contact ratio and undercut / pointed-tip warnings. Runs in your browser.">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="gear.css">
+<script>
+  // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem('fitcalc-lang'); } catch (e) {}
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+    if (l === 'zh') {
+      var h = document.documentElement;
+      h.classList.add('i18n-pending');
+      setTimeout(function () { h.classList.remove('i18n-pending'); }, 1500);
+    }
+  })();
+</script>
+<script type="module" src="gear-app.js"></script>
+</head>
+<body data-tool="gear">
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
+      <div>
+        <h1 data-i18n="h1">Spur Gear Calculator</h1>
+        <p class="sub" data-i18n="subtitle">Involute spur gear pair geometry with profile shift</p>
+      </div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
+
+  <main>
+    <section class="card" aria-labelledby="inputs-h">
+      <h2 id="inputs-h" class="visually-hidden" data-i18n="inputsTitle">Inputs</h2>
+      <div class="gear-inputs">
+        <div class="field">
+          <label for="m" data-i18n="mLabel">Module m (mm)</label>
+          <input id="m" type="number" inputmode="decimal" step="any" min="0" value="2" list="modules" autocomplete="off">
+          <datalist id="modules"></datalist>
+        </div>
+        <div class="field">
+          <label for="z1" data-i18n="z1Label">Teeth z₁ (pinion)</label>
+          <input id="z1" type="number" inputmode="numeric" step="1" min="5" value="20" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="z2" data-i18n="z2Label">Teeth z₂ (gear)</label>
+          <input id="z2" type="number" inputmode="numeric" step="1" min="5" value="40" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="alpha" data-i18n="alphaLabel">Pressure angle α (°)</label>
+          <input id="alpha" type="number" inputmode="decimal" step="any" min="10" max="35" value="20" autocomplete="off">
+        </div>
+      </div>
+      <div class="gear-inputs gear-row2">
+        <div class="field">
+          <label for="x1" data-i18n="x1Label">Profile shift x₁</label>
+          <input id="x1" type="number" inputmode="decimal" step="0.05" min="-3" max="3" value="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="x2" data-i18n="x2Label">Profile shift x₂</label>
+          <input id="x2" type="number" inputmode="decimal" step="0.05" min="-3" max="3" value="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="ha" data-i18n="haLabel">Addendum coeff. h<sub>a</sub>*</label>
+          <input id="ha" type="number" inputmode="decimal" step="0.05" min="0" max="2" value="1" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="c" data-i18n="cLabel">Clearance coeff. c*</label>
+          <input id="c" type="number" inputmode="decimal" step="0.05" min="0" max="1" value="0.25" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" data-i18n="inputHint">Defaults: ISO 53 / GB/T 1356 basic rack (α = 20°, h<sub>a</sub>* = 1, c* = 0.25).</p>
+      <div class="err" id="err" role="alert"></div>
+    </section>
+
+    <section class="card" id="results" aria-labelledby="results-h" aria-live="polite">
+      <h2 id="results-h" data-i18n="resultsTitle">Results</h2>
+      <div id="results-body">
+        <div class="big-row">
+          <div class="big">
+            <div class="m-label" data-i18n="awLabel">Centre distance a′</div>
+            <div class="big-val"><span id="r-aw">–</span><small>mm</small></div>
+          </div>
+          <div class="big">
+            <div class="m-label" data-i18n="epsLabel">Contact ratio ε<sub>α</sub></div>
+            <div class="big-val"><span id="r-eps">–</span></div>
+          </div>
+        </div>
+
+        <ul class="gear-notes" id="notes"></ul>
+
+        <div class="table-wrap gear-table">
+          <table class="data">
+            <thead>
+              <tr>
+                <th scope="col" data-i18n="thQty">Quantity</th>
+                <th scope="col" class="th-p1" data-i18n="thPinion">Pinion (1)</th>
+                <th scope="col" class="th-p2" data-i18n="thGear">Gear (2)</th>
+              </tr>
+            </thead>
+            <tbody id="gear-body"></tbody>
+          </table>
+        </div>
+
+        <h3 class="gear-h3" data-i18n="pairTitle">Gear pair</h3>
+        <div class="gear-pair" id="pair"></div>
+
+        <h3 class="gear-h3" data-i18n="sketchTitle">Sketch</h3>
+        <div class="gear-sketch" id="sketch"></div>
+
+        <div class="summary">
+          <div class="summary-label" data-i18n="summaryTitle">Summary</div>
+          <div class="summary-row">
+            <code id="summary" class="summary-text"></code>
+            <button type="button" id="copy" class="btn" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card about" aria-labelledby="about-h">
+      <h2 id="about-h" data-i18n="aboutTitle">How it is calculated</h2>
+      <div id="about" data-i18n-html="aboutBody"></div>
+      <p class="disclaimer" data-i18n="disclaimer">Geometry only — no strength rating (ISO 6336) yet.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span data-i18n="footerText">Open source, runs entirely in your browser.</span>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener" data-i18n="footerLink">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

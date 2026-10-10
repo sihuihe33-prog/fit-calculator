@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering Unit Converter — Force, Torque, Pressure, Power, Speed</title>
+<meta name="description" content="Free engineering unit converter for mechanical design: force (N, kgf, lbf), torque (N·m, kgf·m, lbf·ft), stress and pressure (MPa, bar, psi), power (kW, hp, PS), rpm, temperature and more, plus a power–torque–speed calculator.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Engineering Unit Converter — Force, Torque, Pressure, Power, Speed">
+<meta property="og:description" content="Convert force, torque, pressure, power, speed, rpm, temperature, area moment of inertia and more — every unit at once, with exact definitions. Fast, free, works offline.">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="units.css">
+<script>
+  // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem('fitcalc-lang'); } catch (e) {}
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+    if (l === 'zh') {
+      var h = document.documentElement;
+      h.classList.add('i18n-pending');
+      setTimeout(function () { h.classList.remove('i18n-pending'); }, 1500);
+    }
+  })();
+</script>
+<script type="module" src="units-app.js"></script>
+</head>
+<body data-tool="units">
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
+      <div>
+        <h1 data-i18n="h1">Engineering Unit Converter</h1>
+        <p class="sub" data-i18n="subtitle">Force, torque, pressure, power, speed and more</p>
+      </div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
+
+  <main>
+    <section class="card" aria-labelledby="inputs-h">
+      <h2 id="inputs-h" class="visually-hidden" data-i18n="inputsTitle">Inputs</h2>
+      <div class="field">
+        <span class="qty-label" id="qty-label" data-i18n="qtyLabel">Quantity</span>
+        <div class="qtabs" id="qtabs" role="group" aria-labelledby="qty-label"></div>
+      </div>
+      <div class="units-inputs">
+        <div class="field">
+          <label for="val" data-i18n="valLabel">Value</label>
+          <input id="val" type="text" inputmode="decimal" value="1" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="from" data-i18n="fromLabel">From unit</label>
+          <select id="from"></select>
+        </div>
+      </div>
+      <div class="err" id="err" role="alert"></div>
+    </section>
+
+    <section class="card" aria-labelledby="results-h">
+      <div class="results-head">
+        <h2 id="results-h" data-i18n="resultsTitle">All units</h2>
+        <span class="copy-status" id="copy-status" aria-live="polite"></span>
+      </div>
+      <p class="hint" data-i18n="resultsHint">Tap a value to copy it. Tap a unit to make it the input unit.</p>
+      <div class="ref-wrap units-wrap">
+        <table class="ref units-table">
+          <thead>
+            <tr>
+              <th scope="col" data-i18n="thUnit">Unit</th>
+              <th scope="col" data-i18n="thValue">Value</th>
+            </tr>
+          </thead>
+          <tbody id="out-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="common-h">
+      <h2 id="common-h" data-i18n="commonTitle">Common conversions</h2>
+      <div class="chips" id="common"></div>
+    </section>
+
+    <section class="card" aria-labelledby="pts-h">
+      <h2 id="pts-h" data-i18n="ptsTitle">Power ↔ torque ↔ speed</h2>
+      <div class="field">
+        <span class="qty-label" id="solve-label" data-i18n="solveLabel">Solve for</span>
+        <div class="seg" id="solve" role="group" aria-labelledby="solve-label">
+          <button type="button" data-solve="T" aria-pressed="true" data-i18n="solveT">Torque T</button>
+          <button type="button" data-solve="P" aria-pressed="false" data-i18n="solveP">Power P</button>
+          <button type="button" data-solve="n" aria-pressed="false" data-i18n="solven">Speed n</button>
+        </div>
+      </div>
+      <div class="pts-inputs">
+        <div class="field" data-f="P">
+          <label for="pts-P" data-i18n="pLabel">Power P (kW)</label>
+          <input id="pts-P" type="text" inputmode="decimal" value="10" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="field" data-f="T">
+          <label for="pts-T" data-i18n="tLabel">Torque T (N·m)</label>
+          <input id="pts-T" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="field" data-f="n">
+          <label for="pts-n" data-i18n="nLabel">Speed n (rpm)</label>
+          <input id="pts-n" type="text" inputmode="decimal" value="1450" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      <div class="err" id="pts-err" role="alert"></div>
+      <p class="hint" id="pts-extra"></p>
+      <p class="hint" data-i18n-html="ptsNote"></p>
+    </section>
+
+    <section class="card about" aria-labelledby="about-h">
+      <h2 id="about-h" data-i18n="aboutTitle">Definitions used</h2>
+      <div id="about" data-i18n-html="aboutBody"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span data-i18n="footerText">Open source, runs entirely in your browser.</span>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener" data-i18n="footerLink">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

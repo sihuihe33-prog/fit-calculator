@@ -1,0 +1,48 @@
+/* 轴承寿命页面专用样式（共享样式见 style.css） */
+.brg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.brg-grid + .brg-grid, .brg-block { margin-top: 12px; }
+.brg-grid-2 { grid-template-columns: 2fr 1fr 1fr; }
+.brg-grid-xy { grid-template-columns: 2fr 1fr 1fr 1fr; }
+.brg-grid-life { grid-template-columns: 2fr 1fr 1fr; }
+.brg-sub { margin: 18px 0 8px; font-size: .9rem; padding-top: 12px; border-top: 1px solid var(--border); }
+.field .unit { font-weight: 500; }
+input[readonly] { color: var(--muted); border-style: dashed; }
+.field[hidden] { display: none; }
+.hint.warn { color: var(--transition); }
+
+details.brg-help { margin-top: 8px; font-size: .86rem; }
+details.brg-help summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: .85rem; }
+details.brg-help p { margin: .5em 0; }
+.brg-table-wrap { overflow-x: auto; }
+table.brg-tab { border-collapse: collapse; font-size: .82rem; margin: 6px 0; }
+table.brg-tab th, table.brg-tab td { padding: 4px 8px; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; }
+table.brg-tab th:first-child, table.brg-tab td:first-child { text-align: left; color: var(--muted); font-weight: 600; }
+table.brg-tab td { font-family: var(--mono); }
+
+.badge.pass { color: var(--clearance); background: var(--clearance-bg); }
+.badge.fail { color: var(--interference); background: var(--interference-bg); }
+.brg-sec { grid-template-columns: repeat(4, 1fr); }
+.brg-sec .metric .m-val.ok { color: var(--clearance); }
+.brg-sec .metric .m-val.bad { color: var(--interference); }
+
+.brg-ratio { margin-top: 18px; }
+.brg-ratio-head { display: flex; justify-content: space-between; gap: 8px; font-size: .88rem; margin-bottom: 6px; }
+.brg-ratio-head b { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.brg-bar { position: relative; height: 16px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; }
+.brg-bar > span { position: absolute; left: 0; top: 0; bottom: 0; background: var(--clearance); }
+.brg-bar.fail > span { background: var(--interference); }
+/* 刻度线：标尺 0–2 倍，中线表示刚好满足 Lh′ */
+.brg-bar::after { content: ""; position: absolute; left: 50%; top: -1px; bottom: -1px; width: 2px; background: var(--text); opacity: .7; }
+.brg-scale { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .75rem; color: var(--muted); margin-top: 2px; }
+
+@media (max-width: 640px) {
+  .brg-grid, .brg-grid-2, .brg-grid-xy, .brg-grid-life { grid-template-columns: 1fr 1fr; }
+  .brg-grid-2 .field:first-child, .brg-grid-xy .field:first-child, .brg-grid-life .field:first-child { grid-column: 1 / -1; }
+  .brg-sec { grid-template-columns: 1fr 1fr; }
+}
+
+/* 下拉框文字较长，用无衬线字体以免在手机上被截断 */
+#type, #rel, #xy, #fpPreset, #ft, #lhPreset { font-family: var(--sans); font-size: .95rem; }
+/* 中间刻度 1.0 精确对准 50 % 位置 */
+.brg-scale { position: relative; }
+.brg-scale span:nth-child(2) { position: absolute; left: 50%; transform: translateX(-50%); }

@@ -1,0 +1,57 @@
+/* 平键连接页面专用样式（共享样式见 style.css） */
+:root {
+  --key-fill: rgba(31, 111, 235, .55);
+  --key-stroke: #1f4fa8;
+  --hub-fill: rgba(90, 102, 119, .16);
+  --hub-stroke: #5a6677;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --key-fill: rgba(91, 155, 255, .55);
+    --key-stroke: #a9c8ff;
+    --hub-fill: rgba(154, 167, 184, .16);
+    --hub-stroke: #9aa7b8;
+  }
+}
+
+.key-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: end; }
+.key-grid + .key-grid { margin-top: 12px; }
+.field[hidden] { display: none; }
+
+.util { margin-top: 16px; }
+.util-head { display: flex; justify-content: space-between; gap: 8px; font-size: .85rem; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+.util-head b { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--text); }
+.util-bar { position: relative; height: 14px; border-radius: 7px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; }
+.util-bar span { display: block; height: 100%; background: var(--clearance); border-radius: 7px 0 0 7px; }
+.util-bar.over span { background: var(--interference); }
+.util-bar.warn span { background: var(--transition); }
+
+.key-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+.key-metrics .metric .m-val { font-size: 1.05rem; }
+
+.notes:empty { display: none; }
+.notes { margin-top: 12px; display: grid; gap: 8px; }
+.notes p { margin: 0; padding: 8px 12px; border-radius: 8px; font-size: .88rem; background: var(--transition-bg); color: var(--text); border-left: 3px solid var(--transition); }
+.notes p.info { background: var(--surface-2); border-left-color: var(--border); color: var(--muted); }
+.notes p.bad { background: var(--interference-bg); border-left-color: var(--interference); }
+
+.key-h3 { margin: 20px 0 8px; font-size: .95rem; }
+table.key-req td.cur { font-weight: 700; color: var(--accent); }
+
+.key-svg svg { color: var(--text); display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; }
+.key-svg .hub { fill: var(--hub-fill); stroke: var(--hub-stroke); stroke-width: 1.5; fill-rule: evenodd; }
+.key-svg .shaft { fill: var(--shaft-fill); stroke: var(--shaft); stroke-width: 1.5; }
+.key-svg .key { fill: var(--key-fill); stroke: var(--key-stroke); stroke-width: 1.5; }
+.key-svg .cl { stroke: var(--muted); stroke-width: .8; stroke-dasharray: 8 3 2 3; fill: none; }
+.key-svg .dim { stroke: var(--text); stroke-width: 1; fill: none; }
+.key-svg .ext { stroke: var(--muted); stroke-width: .7; fill: none; }
+.key-svg text { font-family: var(--mono); font-size: 12px; fill: var(--text); }
+.key-svg .halo { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.key-svg .legend-t { fill: var(--muted); font-size: 11px; }
+
+pre.callout { margin: 0; white-space: pre-wrap; line-height: 1.6; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .key-grid { grid-template-columns: 1fr 1fr; }
+  .key-metrics { grid-template-columns: 1fr 1fr; }
+}

@@ -1,0 +1,44 @@
+/* 轴的强度页面专用样式（只补充 style.css 没有的部分） */
+.sh-grid { display: grid; gap: 12px; margin-top: 12px; }
+.sh-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.sh-span2 { grid-column: span 2; }
+.sh-grid-allow { grid-template-columns: 2fr 1fr; }
+.card h2 + .sh-grid { margin-top: 0; }
+.field[hidden] { display: none; }
+input:disabled { opacity: .5; }
+
+.sh-key-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.sh-results { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.sh-results[hidden] { display: none; }
+.sh-h3 { margin: 0; font-size: 1rem; }
+.big .m-um { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); font-size: .8rem; }
+
+.sh-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+.sh-metrics-4 { grid-template-columns: repeat(4, 1fr); }
+.sh-metrics .metric .m-val { font-size: 1rem; overflow-wrap: anywhere; }
+
+.sh-send { margin: 12px 0 0; }
+.sh-btn-ghost { background: transparent; color: var(--accent); }
+
+/* 利用率条：100% 处画一条竖线，条长最多显示到 150% */
+.sh-util { margin-top: 14px; }
+.sh-util-head { display: flex; justify-content: space-between; font-size: .85rem; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+.sh-util-head b { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--text); }
+.sh-bar { position: relative; height: 14px; border-radius: 7px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; }
+.sh-bar > span { display: block; height: 100%; width: 0; background: var(--clearance); transition: width .2s; }
+.sh-bar.warn > span { background: var(--transition); }
+.sh-bar.over > span { background: var(--interference); }
+.sh-bar-limit { position: absolute; top: -1px; bottom: -1px; left: 66.667%; width: 2px; background: var(--text); opacity: .6; }
+
+@media (max-width: 640px) {
+  .sh-grid-4 { grid-template-columns: 1fr 1fr; }
+  .sh-key { grid-column: 1 / -1; }
+  .sh-grid-allow { grid-template-columns: 1fr; }
+  .sh-metrics, .sh-metrics-4 { grid-template-columns: 1fr 1fr; }
+  .sh-metrics > .metric:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (max-width: 400px) {
+  .big-row { grid-template-columns: 1fr; }
+}
+.sh-link { font: inherit; font-size: inherit; padding: 0; margin-left: 4px; border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; }
