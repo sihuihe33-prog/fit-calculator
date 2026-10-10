@@ -1,5 +1,5 @@
 // 首页：按 site.js 的工具清单生成卡片目录
-import { TOOLS, detectLang, saveLang, renderNav } from './site.js?v=641be984';
+import { TOOLS, detectLang, saveLang, renderNav } from './site.js?v=bf0267f5';
 
 const I18N = {
   en: {

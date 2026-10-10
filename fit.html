@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=c3139a2d">
+<link rel="stylesheet" href="style.css?v=96fa23a0">
 <script>
   // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
   (function () {
@@ -25,7 +25,9 @@
     }
   })();
 </script>
-<script type="module" src="app.js?v=33e68d4e"></script>
+<link rel="modulepreload" href="site.js?v=bf0267f5">
+<link rel="modulepreload" href="iso286.js?v=6b551228">
+<script type="module" blocking="render" src="app.js?v=cbf4a6b3"></script>
 </head>
 <body data-tool="fit">
 <div class="wrap">

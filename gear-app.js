@@ -1,4 +1,4 @@
-import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
+import { detectLang, saveLang, renderNav } from './site.js?v=bf0267f5';
 import { GearError, MODULES, DEFAULTS, calcGearPair } from './gear.js?v=f6933d6f';
 
 /* ---------- 文案字典 ---------- */

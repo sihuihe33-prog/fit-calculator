@@ -1,4 +1,4 @@
-import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
+import { detectLang, saveLang, renderNav } from './site.js?v=bf0267f5';
 import {
   BearingError, LIFE_EXPONENT, RELIABILITY_A1, FP_PRESETS, FT_PRESETS, LIFE_GUIDE, DGBB_TABLE,
   dgbbFactors, calcBearing,

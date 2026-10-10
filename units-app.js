@@ -1,4 +1,4 @@
-import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
+import { detectLang, saveLang, renderNav } from './site.js?v=bf0267f5';
 import {
   QUANTITIES, UnitsError, getQuantity, convert, convertAll, powerTorqueSpeed,
   formatNumber, groupThousands,

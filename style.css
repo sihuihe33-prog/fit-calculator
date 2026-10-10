@@ -474,3 +474,12 @@ body[data-tool="home"] #site-nav { display: none; } /* 首页用卡片导航，�
   .tool-card::after { content: "›"; grid-column: 3; grid-row: 1 / 3; color: var(--muted); font-size: 1.4rem; }
 }
 .note { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+
+/* ---- 跨页面切换动画（View Transitions）：页头和导航保持不动，只让内容淡入淡出 ---- */
+@view-transition { navigation: auto; }
+.top { view-transition-name: site-header; }
+#site-nav { view-transition-name: site-nav; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .16s; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
