@@ -370,3 +370,6 @@ table.ref tbody tr.sel td { border-color: var(--accent); }
   .big .big-val { font-size: 1.6rem; }
   .big { padding: 12px; }
 }
+
+/* 中文界面加载前隐藏页面，防止先闪一下英文（见页面头部的内联脚本） */
+html.i18n-pending body { visibility: hidden; }

@@ -12,6 +12,19 @@
 <meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
+<script>
+  // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem('fitcalc-lang'); } catch (e) {}
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+    if (l === 'zh') {
+      var h = document.documentElement;
+      h.classList.add('i18n-pending');
+      setTimeout(function () { h.classList.remove('i18n-pending'); }, 1500);
+    }
+  })();
+</script>
 <script type="module" src="app.js"></script>
 </head>
 <body>

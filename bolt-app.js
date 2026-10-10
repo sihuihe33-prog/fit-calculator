@@ -423,3 +423,4 @@ readHash();
 applyLang();
 syncPresetFromMu();
 update(false);
+document.documentElement.classList.remove('i18n-pending');
