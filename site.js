@@ -4,13 +4,13 @@
 export const LANG_KEY = 'fitcalc-lang';
 
 export const TOOLS = [
-  { id: 'fit', href: 'fit.html', name: 'Fits & Tolerances', nameZh: '公差配合', desc: 'ISO 286 hole/shaft limits, clearance and interference.', descZh: 'ISO 286 孔轴极限偏差、间隙与过盈。' },
-  { id: 'bolt', href: 'bolt.html', name: 'Bolt Torque', nameZh: '螺栓扭矩', desc: 'Tightening torque and preload per VDI 2230.', descZh: '按 VDI 2230 计算拧紧扭矩与预紧力。' },
-  { id: 'gear', href: 'gear.html', name: 'Spur Gears', nameZh: '齿轮参数', desc: 'Spur gear geometry with profile shift and contact ratio.', descZh: '直齿圆柱齿轮几何尺寸、变位与重合度。' },
-  { id: 'shaft', href: 'shaft.html', name: 'Shaft Strength', nameZh: '轴的强度', desc: 'Minimum diameter from torsion and combined bending–torsion check.', descZh: '按扭转估算轴径，按弯扭合成校核。' },
-  { id: 'bearing', href: 'bearing.html', name: 'Bearing Life', nameZh: '轴承寿命', desc: 'Equivalent dynamic load and L10 rating life.', descZh: '当量动载荷与基本额定寿命 L10h。' },
-  { id: 'key', href: 'key.html', name: 'Parallel Keys', nameZh: '平键连接', desc: 'GB/T 1096 key sizes and bearing-pressure check.', descZh: 'GB/T 1096 平键尺寸与挤压强度校核。' },
-  { id: 'units', href: 'units.html', name: 'Unit Converter', nameZh: '单位换算', desc: 'Force, torque, stress, power, speed and more.', descZh: '力、扭矩、应力、功率、转速等工程单位。' },
+  { id: 'fit', href: 'fit.html', tag: 'ISO 286', tagZh: 'ISO 286', name: 'Fits & Tolerances', nameZh: '公差配合', desc: 'ISO 286 hole/shaft limits, clearance and interference.', descZh: 'ISO 286 孔轴极限偏差、间隙与过盈。' },
+  { id: 'bolt', href: 'bolt.html', tag: 'VDI 2230', tagZh: 'VDI 2230', name: 'Bolt Torque', nameZh: '螺栓扭矩', desc: 'Tightening torque and preload per VDI 2230.', descZh: '按 VDI 2230 计算拧紧扭矩与预紧力。' },
+  { id: 'gear', href: 'gear.html', tag: 'GB/T 1356', tagZh: 'GB/T 1356', name: 'Spur Gears', nameZh: '齿轮参数', desc: 'Spur gear geometry with profile shift and contact ratio.', descZh: '直齿圆柱齿轮几何尺寸、变位与重合度。' },
+  { id: 'shaft', href: 'shaft.html', tag: 'Textbook method', tagZh: '濮良贵《机械设计》', name: 'Shaft Strength', nameZh: '轴的强度', desc: 'Minimum diameter from torsion and combined bending–torsion check.', descZh: '按扭转估算轴径，按弯扭合成校核。' },
+  { id: 'bearing', href: 'bearing.html', tag: 'ISO 281', tagZh: 'ISO 281', name: 'Bearing Life', nameZh: '轴承寿命', desc: 'Equivalent dynamic load and L10 rating life.', descZh: '当量动载荷与基本额定寿命 L10h。' },
+  { id: 'key', href: 'key.html', tag: 'GB/T 1096', tagZh: 'GB/T 1096', name: 'Parallel Keys', nameZh: '平键连接', desc: 'GB/T 1096 key sizes and bearing-pressure check.', descZh: 'GB/T 1096 平键尺寸与挤压强度校核。' },
+  { id: 'units', href: 'units.html', tag: 'SI', tagZh: 'SI', name: 'Unit Converter', nameZh: '单位换算', desc: 'Force, torque, stress, power, speed and more.', descZh: '力、扭矩、应力、功率、转速等工程单位。' },
 ];
 
 export function detectLang() {
