@@ -298,3 +298,75 @@ table.data td.code { font-weight: 700; }
   .summary-row { flex-direction: column; }
   .btn { min-height: 40px; }
 }
+
+/* ---- site nav ---- */
+.nav { display: flex; gap: 8px; margin: 0 0 16px; flex-wrap: wrap; }
+.nav a {
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.nav a:hover { border-color: var(--accent); color: var(--text); }
+.nav a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+
+/* ---- bolt torque page ---- */
+:root {
+  --seg-pitch: #0e7a4f;
+  --seg-thread: #e07a10;
+  --seg-head: #2b7de9;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --seg-pitch: #5fdca0; --seg-thread: #ffa94d; --seg-head: #6aa8ff; }
+}
+.bolt-inputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.bolt-friction { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+.hint { color: var(--muted); font-size: .8rem; margin: 6px 0 0; }
+.big-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.big {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.big .m-label { font-size: .85rem; color: var(--muted); font-weight: 600; }
+.big .big-val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 2rem; font-weight: 700; line-height: 1.2; }
+.big .big-val small { font-size: .95rem; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.sec-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 12px; }
+.sec-grid .metric .m-val { font-size: 1rem; }
+.breakdown { margin-top: 20px; }
+.breakdown h3, .ref-title { margin: 0 0 8px; font-size: .95rem; }
+.stack { display: flex; height: 28px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface-2); }
+.stack > span { display: block; min-width: 0; }
+.seg-pitch { background: var(--seg-pitch); }
+.seg-thread { background: var(--seg-thread); }
+.seg-head { background: var(--seg-head); }
+.legend { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .88rem; }
+.legend li { display: flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.legend b { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.ref-wrap { overflow-x: auto; max-height: 420px; overflow-y: auto; }
+table.ref { width: 100%; border-collapse: collapse; font-size: .92rem; }
+table.ref th, table.ref td { padding: 7px 8px; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; }
+table.ref th:first-child, table.ref td:first-child { text-align: left; }
+table.ref thead th { position: sticky; top: 0; background: var(--surface); font-size: .8rem; color: var(--muted); border-bottom: 2px solid var(--border); }
+table.ref td { font-family: var(--mono); }
+table.ref tbody tr { cursor: pointer; }
+table.ref tbody tr:hover { background: var(--surface-2); }
+table.ref tbody tr.sel { background: var(--accent); color: var(--accent-text); font-weight: 700; }
+table.ref tbody tr.sel td { border-color: var(--accent); }
+.about h3 { font-size: .95rem; margin: 1em 0 .2em; }
+.about code { font-family: var(--mono); font-size: .88em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+@media (max-width: 640px) {
+  .bolt-inputs { grid-template-columns: 1fr 1fr; }
+  .bolt-friction { grid-template-columns: 1fr 1fr; }
+  .bolt-friction .field:first-child { grid-column: 1 / -1; }
+  .sec-grid { grid-template-columns: 1fr 1fr; }
+  .big .big-val { font-size: 1.6rem; }
+  .big { padding: 12px; }
+}

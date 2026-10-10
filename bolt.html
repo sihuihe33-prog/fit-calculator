@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolt Torque Calculator — Tightening Torque &amp; Preload (VDI 2230)</title>
+<meta name="description" content="Free bolt tightening torque calculator for M3–M36 coarse-thread steel bolts, classes 4.6–12.9. Get preload, torque, K-factor and a friction breakdown based on VDI 2230.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bolt Torque Calculator — Tightening Torque &amp; Preload (VDI 2230)">
+<meta property="og:description" content="Tightening torque and preload for metric bolts M3–M36, with friction presets, torque breakdown and a quick-reference table. Fast, free, works offline.">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="bolt-app.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
+      <div>
+        <h1 data-i18n="h1">Bolt Torque Calculator</h1>
+        <p class="sub" data-i18n="subtitle">Tightening torque and preload per VDI 2230</p>
+      </div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Pages">
+    <a href="index.html" data-i18n="navFits">Fits &amp; Tolerances</a>
+    <a href="bolt.html" aria-current="page" data-i18n="navBolt">Bolt Torque</a>
+  </nav>
+
+  <main>
+    <section class="card" aria-labelledby="inputs-h">
+      <h2 id="inputs-h" class="visually-hidden" data-i18n="inputsTitle">Inputs</h2>
+      <div class="bolt-inputs">
+        <div class="field">
+          <label for="size" data-i18n="sizeLabel">Thread size</label>
+          <select id="size"></select>
+        </div>
+        <div class="field">
+          <label for="cls" data-i18n="clsLabel">Property class</label>
+          <select id="cls"></select>
+        </div>
+        <div class="field">
+          <label for="head" data-i18n="headLabel">Head type</label>
+          <select id="head"></select>
+        </div>
+        <div class="field">
+          <label for="nu" data-i18n="nuLabel">Utilization ν (%)</label>
+          <input id="nu" type="number" inputmode="decimal" step="1" min="50" max="100" value="90" autocomplete="off">
+        </div>
+      </div>
+      <div class="bolt-friction">
+        <div class="field">
+          <label for="preset" data-i18n="presetLabel">Friction condition</label>
+          <select id="preset"></select>
+        </div>
+        <div class="field">
+          <label for="muG" data-i18n="muGLabel">μG (thread)</label>
+          <input id="muG" type="number" inputmode="decimal" step="0.01" min="0.04" max="0.5" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="muK" data-i18n="muKLabel">μK (head)</label>
+          <input id="muK" type="number" inputmode="decimal" step="0.01" min="0.04" max="0.5" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" id="preset-range"></p>
+      <div class="err" id="err" role="alert"></div>
+    </section>
+
+    <section class="card" id="results" aria-labelledby="results-h" aria-live="polite">
+      <h2 id="results-h" data-i18n="resultsTitle">Results</h2>
+      <div id="results-body">
+        <div class="big-row">
+          <div class="big">
+            <div class="m-label" data-i18n="torqueLabel">Tightening torque M<sub>A</sub></div>
+            <div class="big-val"><span id="r-torque">–</span><small>N·m</small></div>
+          </div>
+          <div class="big">
+            <div class="m-label" data-i18n="preloadLabel">Preload F<sub>M</sub></div>
+            <div class="big-val"><span id="r-preload">–</span><small>kN</small></div>
+          </div>
+        </div>
+        <div class="sec-grid">
+          <div class="metric"><div class="m-label" data-i18n="asLabel">Stress area A<sub>s</sub></div><div class="m-val" id="r-as"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="d2Label">Pitch dia. d<sub>2</sub></div><div class="m-val" id="r-d2"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="rpLabel">Yield R<sub>p0.2</sub></div><div class="m-val" id="r-rp"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="kLabel">K-factor</div><div class="m-val" id="r-k"></div></div>
+          <div class="metric"><div class="m-label" data-i18n="sigLabel">Equivalent stress</div><div class="m-val" id="r-sig"></div><div class="m-um" id="r-sig2"></div></div>
+        </div>
+
+        <div class="breakdown">
+          <h3 data-i18n="breakTitle">Where does the torque go?</h3>
+          <div class="stack" id="stack" role="img"></div>
+          <ul class="legend" id="legend"></ul>
+        </div>
+
+        <div class="summary">
+          <div class="summary-label" data-i18n="summaryTitle">Summary</div>
+          <div class="summary-row">
+            <code id="summary" class="summary-text"></code>
+            <button type="button" id="copy" class="btn" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="ref-h">
+      <h2 id="ref-h" data-i18n="refTitle">Quick reference</h2>
+      <p class="hint" id="ref-note"></p>
+      <div class="ref-wrap">
+        <table class="ref">
+          <thead>
+            <tr>
+              <th scope="col" data-i18n="thSize">Size</th>
+              <th scope="col" data-i18n="thTorque">Torque (N·m)</th>
+              <th scope="col" data-i18n="thPreload">Preload (kN)</th>
+            </tr>
+          </thead>
+          <tbody id="ref-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card about" aria-labelledby="about-h">
+      <h2 id="about-h" data-i18n="aboutTitle">How it is calculated</h2>
+      <div id="about" data-i18n-html="aboutBody"></div>
+      <p class="disclaimer" data-i18n="disclaimer">Guide values. Check against your fastener supplier data and VDI 2230 for critical joints.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span data-i18n="footerText">Open source, runs entirely in your browser.</span>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener" data-i18n="footerLink">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

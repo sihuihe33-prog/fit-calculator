@@ -14,6 +14,13 @@ A free, fast, ad-free calculator for ISO 286 hole/shaft tolerances and fits (cle
 - English / 中文 interface
 - Shareable links (e.g. `#d=25&fit=H7/g6`)
 
+### Bolt torque calculator (`/bolt`)
+
+- Tightening torque and maximum assembly preload per VDI 2230 (simplified)
+- Metric coarse threads M3–M36, property classes 4.6–12.9, hex bolts or socket head cap screws
+- Friction presets or custom μG / μK, adjustable yield utilization
+- Torque breakdown (bolt stretch vs. thread friction vs. head friction) and a quick-reference table
+
 ## Example
 
 Ø25 H7/g6:
@@ -26,7 +33,7 @@ A free, fast, ad-free calculator for ISO 286 hole/shaft tolerances and fits (cle
 
 Plain HTML/CSS/JavaScript ES modules. No build step, no dependencies.
 
-- Calculation engine: `iso286.js`
+- Calculation engines: `iso286.js` (fits), `bolt.js` (bolt torque)
 - Tests: `test/`, run with `node --test`
 
 ## Run locally
