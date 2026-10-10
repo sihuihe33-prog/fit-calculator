@@ -1,8 +1,8 @@
-import { detectLang, saveLang, renderNav } from './site.js';
+import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
 import {
   QUANTITIES, UnitsError, getQuantity, convert, convertAll, powerTorqueSpeed,
   formatNumber, groupThousands,
-} from './units.js';
+} from './units.js?v=fbb3b84e';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

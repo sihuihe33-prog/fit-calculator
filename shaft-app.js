@@ -1,8 +1,8 @@
-import { detectLang, saveLang, renderNav } from './site.js';
+import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
 import {
   ShaftError, MATERIALS, ALLOW_PRESETS, ALPHA_PRESETS,
   minDiameter, combinedCheck, keyForDiameter,
-} from './shaft.js';
+} from './shaft.js?v=cf01e6a2';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

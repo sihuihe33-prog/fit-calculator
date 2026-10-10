@@ -1,8 +1,8 @@
-import { detectLang, saveLang, renderNav } from './site.js';
+import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
 import {
   KeyError, KEY_TABLE, LENGTHS, KEY_TYPES, ALLOW_PRESETS, DEFAULT_GAP,
   selectKey, torqueFromPower, suggestLength, checkKey,
-} from './key.js';
+} from './key.js?v=bba25929';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

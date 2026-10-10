@@ -1,5 +1,5 @@
-import { detectLang, saveLang, renderNav } from './site.js';
-import { GearError, MODULES, DEFAULTS, calcGearPair } from './gear.js';
+import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
+import { GearError, MODULES, DEFAULTS, calcGearPair } from './gear.js?v=f6933d6f';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

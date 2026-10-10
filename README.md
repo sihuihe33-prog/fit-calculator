@@ -53,6 +53,10 @@ npx serve .
 
 Or use any static server, then open the printed URL. ES modules require http, not `file://`.
 
+## Cache busting
+
+Run `node scripts/stamp.mjs` before committing (the local pre-commit hook does this automatically). It appends a content hash (`?v=…`) to every local `.js` / `.css` reference so browsers never mix stale cached files with a new deploy.
+
 ## Deploy
 
 Cloudflare Pages:

@@ -1,8 +1,8 @@
-import { detectLang, saveLang, renderNav } from './site.js';
+import { detectLang, saveLang, renderNav } from './site.js?v=641be984';
 import {
   BearingError, LIFE_EXPONENT, RELIABILITY_A1, FP_PRESETS, FT_PRESETS, LIFE_GUIDE, DGBB_TABLE,
   dgbbFactors, calcBearing,
-} from './bearing.js';
+} from './bearing.js?v=8b79b71f';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

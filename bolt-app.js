@@ -1,7 +1,7 @@
-import { renderNav } from './site.js';
+import { renderNav } from './site.js?v=641be984';
 import {
   BoltError, THREADS, CLASSES, HEAD_TYPES, FRICTION_PRESETS, calcBolt,
-} from './bolt.js';
+} from './bolt.js?v=8bda0b06';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

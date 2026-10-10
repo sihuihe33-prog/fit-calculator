@@ -1,8 +1,8 @@
-import { renderNav } from './site.js';
+import { renderNav } from './site.js?v=641be984';
 import {
   Iso286Error, MAX_SIZE, SHAFT_LETTERS, HOLE_LETTERS, GRADES,
   parseFit, calcFit, PREFERRED_FITS,
-} from './iso286.js';
+} from './iso286.js?v=6b551228';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {
