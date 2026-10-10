@@ -1,3 +1,4 @@
+import { renderNav } from './site.js';
 import {
   BoltError, THREADS, CLASSES, HEAD_TYPES, FRICTION_PRESETS, calcBolt,
 } from './bolt.js';
@@ -7,8 +8,6 @@ const I18N = {
   en: {
     docTitle: 'Bolt Torque Calculator — Tightening Torque & Preload (VDI 2230)',
     docDesc: 'Free bolt tightening torque calculator for M3–M36 coarse-thread steel bolts, classes 4.6–12.9. Get preload, torque, K-factor and a friction breakdown based on VDI 2230.',
-    navFits: 'Fits & Tolerances',
-    navBolt: 'Bolt Torque',
     h1: 'Bolt Torque Calculator',
     subtitle: 'Tightening torque and preload per VDI 2230',
     inputsTitle: 'Inputs',
@@ -62,8 +61,6 @@ const I18N = {
   zh: {
     docTitle: '螺栓拧紧扭矩计算器 — 预紧力与扭矩（VDI 2230）',
     docDesc: '免费的螺栓拧紧扭矩计算器，适用于 M3–M36 粗牙钢制螺栓，性能等级 4.6–12.9。基于 VDI 2230 给出预紧力、扭矩、扭矩系数 K 以及摩擦损耗分解。',
-    navFits: '公差配合',
-    navBolt: '螺栓扭矩',
     h1: '螺栓拧紧扭矩计算器',
     subtitle: '基于 VDI 2230 的拧紧扭矩与预紧力',
     inputsTitle: '输入',
@@ -199,6 +196,7 @@ function syncPresetFromMu() {
 /* ---------- 语言 ---------- */
 function applyLang() {
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  renderNav(lang);
   document.title = t('docTitle');
   const set = (sel, v) => { const n = document.querySelector(sel); if (n) n.setAttribute('content', v); };
   set('meta[name="description"]', t('docDesc'));

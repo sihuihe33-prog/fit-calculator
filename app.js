@@ -1,3 +1,4 @@
+import { renderNav } from './site.js';
 import {
   Iso286Error, MAX_SIZE, SHAFT_LETTERS, HOLE_LETTERS, GRADES,
   parseFit, calcFit, PREFERRED_FITS,
@@ -8,8 +9,6 @@ const I18N = {
   en: {
     docTitle: 'ISO Fit & Tolerance Calculator — Hole/Shaft Limits, Clearance, Interference',
     docDesc: 'Free ISO 286 fit and tolerance calculator. Enter a nominal size and a fit such as H7/g6 to get hole and shaft limit deviations, max/min clearance or interference, and a tolerance zone diagram.',
-    navFits: 'Fits & Tolerances',
-    navBolt: 'Bolt Torque',
     h1: 'ISO Fit & Tolerance Calculator',
     subtitle: 'ISO 286 hole/shaft limits, clearance and interference',
     inputsTitle: 'Inputs',
@@ -73,8 +72,6 @@ const I18N = {
   zh: {
     docTitle: 'ISO 配合与公差计算器 — 孔轴极限偏差、间隙、过盈',
     docDesc: '免费的 ISO 286 配合与公差计算器。输入公称尺寸和配合（如 H7/g6），即可得到孔和轴的极限偏差、最大/最小间隙或过盈，以及公差带图。',
-    navFits: '公差配合',
-    navBolt: '螺栓扭矩',
     h1: 'ISO 配合与公差计算器',
     subtitle: 'ISO 286 孔轴极限偏差、间隙与过盈',
     inputsTitle: '输入',
@@ -253,6 +250,7 @@ function markActiveChip() {
 /* ---------- 语言 ---------- */
 function applyLang() {
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  renderNav(lang);
   document.title = t('docTitle');
   const md = document.querySelector('meta[name="description"]');
   if (md) md.setAttribute('content', t('docDesc'));

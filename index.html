@@ -3,11 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ISO Fit &amp; Tolerance Calculator — Hole/Shaft Limits, Clearance, Interference</title>
-<meta name="description" content="Free ISO 286 fit and tolerance calculator. Enter a nominal size and a fit such as H7/g6 to get hole and shaft limit deviations, max/min clearance or interference, and a tolerance zone diagram.">
+<script>
+  // 旧版首页就是公差计算器：带 #d=…&fit=… 的旧分享链接直接跳到新地址
+  if (/(^#|&)(d|fit)=/.test(location.hash)) location.replace('fit.html' + location.hash);
+</script>
+<title>Mechanical Design Toolbox — Fits, Bolt Torque, Gears, Shafts, Bearings, Keys</title>
+<meta name="description" content="Free mechanical design calculators: ISO 286 fits and tolerances, bolt tightening torque (VDI 2230), spur gear geometry, shaft strength, bearing life, parallel keys and engineering unit conversion.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="ISO Fit &amp; Tolerance Calculator — Hole/Shaft Limits, Clearance, Interference">
-<meta property="og:description" content="ISO 286 hole/shaft limit deviations, clearance and interference, preferred fits and a tolerance zone diagram. Fast, free, works offline.">
+<meta property="og:title" content="Mechanical Design Toolbox">
+<meta property="og:description" content="Fits and tolerances, bolt torque, gears, shafts, bearings, keys and unit conversion. Fast, free, runs in your browser.">
 <meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -25,16 +29,16 @@
     }
   })();
 </script>
-<script type="module" src="app.js"></script>
+<script type="module" src="home.js"></script>
 </head>
-<body>
+<body data-tool="home">
 <div class="wrap">
   <header class="top">
     <div class="brand">
       <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
       <div>
-        <h1 data-i18n="h1">ISO Fit &amp; Tolerance Calculator</h1>
-        <p class="sub" data-i18n="subtitle">ISO 286 hole/shaft limits, clearance and interference</p>
+        <h1 data-i18n="h1">Mechanical Design Toolbox</h1>
+        <p class="sub" data-i18n="subtitle">Everyday machine design calculations</p>
       </div>
     </div>
     <div class="lang" role="group" aria-label="Language">
@@ -43,101 +47,16 @@
     </div>
   </header>
 
-  <nav class="nav" aria-label="Pages">
-    <a href="index.html" aria-current="page" data-i18n="navFits">Fits &amp; Tolerances</a>
-    <a href="bolt.html" data-i18n="navBolt">Bolt Torque</a>
-  </nav>
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
 
   <main>
-    <section class="card" aria-labelledby="inputs-h">
-      <h2 id="inputs-h" class="visually-hidden" data-i18n="inputsTitle">Inputs</h2>
-      <div class="grid-inputs">
-        <div class="field">
-          <label for="size" data-i18n="sizeLabel">Nominal size (mm)</label>
-          <input id="size" type="number" inputmode="decimal" step="any" min="0" value="25" autocomplete="off">
-          <div class="err" id="err-size" role="alert"></div>
-        </div>
-        <div class="field">
-          <label for="fit" data-i18n="fitLabel">Fit (hole/shaft)</label>
-          <input id="fit" type="text" value="H7/g6" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="H7/g6">
-          <div class="err" id="err-fit" role="alert"></div>
-        </div>
-      </div>
-
-      <div class="selects">
-        <div class="field">
-          <label for="hole-letter" data-i18n="holeLetter">Hole letter</label>
-          <select id="hole-letter"></select>
-        </div>
-        <div class="field">
-          <label for="hole-grade" data-i18n="holeGrade">Hole grade (IT)</label>
-          <select id="hole-grade"></select>
-        </div>
-        <div class="field">
-          <label for="shaft-letter" data-i18n="shaftLetter">Shaft letter</label>
-          <select id="shaft-letter"></select>
-        </div>
-        <div class="field">
-          <label for="shaft-grade" data-i18n="shaftGrade">Shaft grade (IT)</label>
-          <select id="shaft-grade"></select>
-        </div>
-      </div>
-
-      <div class="quick">
-        <div class="quick-title" id="quick-h" data-i18n="quickTitle">Preferred fits</div>
-        <div class="chips" id="chips" role="group" aria-labelledby="quick-h"></div>
-        <p class="use" id="chip-use" aria-live="polite"></p>
-      </div>
-    </section>
-
-    <section class="card" id="results" aria-labelledby="results-h" aria-live="polite">
-      <div class="results-head">
-        <h2 id="results-h" data-i18n="resultsTitle">Results</h2>
-        <span class="badge" id="badge" hidden></span>
-      </div>
-      <div class="notice" id="notice" hidden></div>
-
-      <div id="results-body">
-        <div class="table-wrap">
-          <table class="data">
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col" data-i18n="hole">Hole</th>
-                <th scope="col" data-i18n="shaft">Shaft</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
-
-        <div class="clearances" id="clearances"></div>
-
-        <div class="summary">
-          <div class="summary-label" data-i18n="summaryTitle">Summary</div>
-          <div class="summary-row">
-            <code id="summary" class="summary-text"></code>
-            <button type="button" id="copy" class="btn" data-i18n="copy">Copy</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" id="diagram-card" aria-labelledby="diagram-h">
-      <h2 id="diagram-h" data-i18n="diagramTitle">Tolerance zone diagram</h2>
-      <div id="diagram" class="diagram"></div>
-    </section>
-
-    <section class="card about" aria-labelledby="about-h">
-      <h2 id="about-h" data-i18n="aboutTitle">About hole-basis fits</h2>
-      <div id="about" data-i18n-html="aboutBody"></div>
-      <p class="disclaimer" data-i18n="disclaimer">Values follow ISO 286. Always verify against the standard for critical applications.</p>
-    </section>
+    <ul class="tool-grid" id="tool-grid"></ul>
+    <p class="note" data-i18n="note">All calculations run locally in your browser. Values follow the cited standards and textbook methods — verify critical designs against the original sources.</p>
   </main>
 
   <footer class="foot">
     <span data-i18n="footerText">Open source, runs entirely in your browser.</span>
-    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener" data-i18n="footerLink">GitHub</a>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener">GitHub</a>
   </footer>
 </div>
 </body>

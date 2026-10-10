@@ -300,8 +300,15 @@ table.data td.code { font-weight: 700; }
 }
 
 /* ---- site nav ---- */
-.nav { display: flex; gap: 8px; margin: 0 0 16px; flex-wrap: wrap; }
+/* 工具多了以后单行横向滚动，避免在手机上挤成好几行 */
+.nav {
+  display: flex; gap: 8px; margin: 0 0 16px; flex-wrap: nowrap;
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+.nav::-webkit-scrollbar { display: none; }
 .nav a {
+  flex: none; white-space: nowrap;
   padding: 7px 14px;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -373,3 +380,21 @@ table.ref tbody tr.sel td { border-color: var(--accent); }
 
 /* 中文界面加载前隐藏页面，防止先闪一下英文（见页面头部的内联脚本） */
 html.i18n-pending body { visibility: hidden; }
+
+/* ---- home: tool directory ---- */
+.tool-grid {
+  list-style: none; margin: 0 0 16px; padding: 0;
+  display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.tool-card {
+  display: flex; flex-direction: column; gap: 6px; height: 100%;
+  padding: 16px; border: 1px solid var(--border); border-radius: 12px;
+  background: var(--surface); color: var(--text); text-decoration: none;
+  transition: border-color .15s, transform .15s;
+}
+.tool-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.tool-card:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tool-name { font-weight: 700; font-size: 1.05rem; }
+.tool-desc { color: var(--muted); font-size: .92rem; line-height: 1.5; flex: 1; }
+.tool-open { color: var(--accent); font-weight: 600; font-size: .9rem; }
+.note { color: var(--muted); font-size: .88rem; line-height: 1.6; }

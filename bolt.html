@@ -27,7 +27,7 @@
 </script>
 <script type="module" src="bolt-app.js"></script>
 </head>
-<body>
+<body data-tool="bolt">
 <div class="wrap">
   <header class="top">
     <div class="brand">
@@ -43,10 +43,7 @@
     </div>
   </header>
 
-  <nav class="nav" aria-label="Pages">
-    <a href="index.html" data-i18n="navFits">Fits &amp; Tolerances</a>
-    <a href="bolt.html" aria-current="page" data-i18n="navBolt">Bolt Torque</a>
-  </nav>
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
 
   <main>
     <section class="card" aria-labelledby="inputs-h">
