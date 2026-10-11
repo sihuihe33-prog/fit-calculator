@@ -90,8 +90,8 @@ test('弯扭合成：M=200 N·m, T=300 N·m, α=0.6, d=40 → σca ≈ 42.8 MPa'
   assert.equal(r.pass, true);
   close(r.util, 42.824 / 60, 0.0001, '利用率');
   close(r.Wapprox, 6400, 1e-9, '0.1d³');
-  // d_req = ∛(Mca/(0.1·60)) = ∛44845.4 = 35.53
-  close(r.dReq, 35.528, 0.001, 'dReq');
+  // d_req = ∛(32·Mca/(π·60))，与校核用同一 W = πd³/32
+  close(r.dReq, 35.747, 0.001, 'dReq');
 });
 
 test('两平面弯矩合成 M = √(Mh²+Mv²)', () => {
@@ -141,4 +141,15 @@ test('非法输入报错', () => {
   assert.throws(() => combinedCheck({ ...ok, M: -1 }), { code: 'MOMENT' });
   assert.throws(() => combinedCheck({ ...ok, keyway: { count: 1, b: 12, t: 25 } }), { code: 'KEY' });
   assert.throws(() => combinedCheck({ ...ok, beta: 0.8, keyway: { count: 1, b: 12, t: 5 } }), { code: 'KEY' });
+});
+
+test('性质：反算的最小直径代回校核必须合格', () => {
+  // 审查反例：M=162 N·m、T=0、[σ−1]=60，旧算法给 30 mm，代回 61.1 MPa 不合格
+  const r = combinedCheck({ M: 162e3, T: 0, alpha: 0.6, d: 40, allow: 60 });
+  close(r.dReq, 30.1848, 0.001, 'dReq');
+  for (const [M, T, beta] of [[162e3, 0, 0], [200e3, 300e3, 0], [5e5, 8e5, 0.5], [1e4, 2e6, 0]]) {
+    const a = combinedCheck({ M, T, alpha: 0.6, d: 40, beta, allow: 60 });
+    const b = combinedCheck({ M, T, alpha: 0.6, d: a.dReq, beta, allow: 60 });
+    assert.ok(b.sigma <= 60 * (1 + 1e-9), `M=${M} T=${T} β=${beta}: σ=${b.sigma}`);
+  }
 });

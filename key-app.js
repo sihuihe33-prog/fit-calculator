@@ -2,7 +2,7 @@ import { detectLang, saveLang, renderNav } from './site.js?v=dc76b3df';
 import {
   KeyError, KEY_TABLE, LENGTHS, KEY_TYPES, ALLOW_PRESETS, DEFAULT_GAP,
   selectKey, torqueFromPower, suggestLength, checkKey,
-} from './key.js?v=bba25929';
+} from './key.js?v=d2497bac';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

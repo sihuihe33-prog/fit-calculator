@@ -2,7 +2,7 @@ import { detectLang, saveLang, renderNav } from './site.js?v=dc76b3df';
 import {
   ShaftError, MATERIALS, ALLOW_PRESETS, ALPHA_PRESETS,
   minDiameter, combinedCheck, keyForDiameter,
-} from './shaft.js?v=8110db0c';
+} from './shaft.js?v=67e0f249';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {
@@ -78,7 +78,7 @@ const I18N = {
     sigmaLabel: 'Combined stress σ<sub>ca</sub>',
     sigmaNote: '[σ−1] = {a} MPa',
     dReqLabel: 'Required diameter d<sub>req</sub>',
-    dReqSolid: '∛(Mca / (0.1·[σ−1])), keyway not included',
+    dReqSolid: '∛(32·Mca / (π·[σ−1])), keyway not included',
     dReqHollow: 'hollow β = {b}, keyway not included',
     utilLabel: 'Utilization σ<sub>ca</sub> / [σ<sub>−1</sub>]',
     mResLabel: 'Resultant M',
@@ -205,7 +205,7 @@ const I18N = {
     sigmaLabel: '计算应力 σ<sub>ca</sub>',
     sigmaNote: '[σ−1] = {a} MPa',
     dReqLabel: '所需最小直径 d<sub>req</sub>',
-    dReqSolid: '∛(Mca / (0.1·[σ−1]))，未计键槽',
+    dReqSolid: '∛(32·Mca / (π·[σ−1]))，未计键槽',
     dReqHollow: '空心 β = {b}，未计键槽',
     utilLabel: '利用率 σ<sub>ca</sub> / [σ<sub>−1</sub>]',
     mResLabel: '合成弯矩 M',
@@ -489,7 +489,7 @@ function updateChk() {
   el.badge.className = 'badge ' + (r.pass ? 'clearance' : 'interference');
   el.sigma.textContent = fmt(r.sigma, 1);
   el.sigmaNote.textContent = tf('sigmaNote', { a: fmtNum(r.input.allow, 2) });
-  el.dreq.textContent = fmt(r.dReq, 1);
+  el.dreq.textContent = fmt(Math.ceil(r.dReq * 10 - 1e-9) / 10, 1); // 向上取，显示值代回也合格
   el.dreqNote.textContent = r.input.beta > 0 ? tf('dReqHollow', { b: fmtNum(r.input.beta) }) : t('dReqSolid');
 
   const pct = r.util * 100;
@@ -516,7 +516,7 @@ function updateChk() {
   el.summary2.textContent =
     `${mPart}, T=${fmtNum(vals.T, 2)} N·m, α=${fmtNum(vals.alpha)}, d=${fmtNum(vals.d, 2)} mm ${sec}${kw} → ` +
     `Mca=${fmt(r.Mca / 1000, 2)} N·m, W=${fmtInt(r.W)} mm³, σca=${fmt(r.sigma, 1)} MPa ` +
-    `${r.pass ? '≤' : '>'} [σ-1]=${fmtNum(r.input.allow, 2)} MPa (${fmt(pct, 0)}%) ${r.pass ? 'OK' : 'NOT OK'}, d_req=${fmt(r.dReq, 1)} mm`;
+    `${r.pass ? '≤' : '>'} [σ-1]=${fmtNum(r.input.allow, 2)} MPa (${fmt(pct, 0)}%) ${r.pass ? 'OK' : 'NOT OK'}, d_req=${fmt(Math.ceil(r.dReq * 10 - 1e-9) / 10, 1)} mm`;
 }
 
 function chkError(msg) {

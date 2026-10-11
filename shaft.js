@@ -176,8 +176,9 @@ export function combinedCheck({ Mh, Mv, M, T, alpha, d, beta = 0, keyway = null,
   const Mca = Math.hypot(Mt, aT);
   const sigma = Mca / sec.W;
   const util = sigma / allow;
-  // 满足强度所需的最小（实心/空心）直径：d ≥ ∛(Mca / (0.1·[σ−1]·(1−β⁴)))，未计键槽
-  const dReq = Math.cbrt(Mca / (0.1 * allow * (1 - beta ** 4)));
+  // 满足强度所需的最小（实心/空心）直径，与上面校核用同一截面系数 πd³/32：
+  // d ≥ ∛(32·Mca / (π·[σ−1]·(1−β⁴)))，未计键槽。不能用近似 W≈0.1d³ 反算，否则代回校核会略超
+  const dReq = Math.cbrt((32 * Mca) / (Math.PI * allow * (1 - beta ** 4)));
   return {
     input: { Mh, Mv, M, T, alpha, d, beta, keyway, allow },
     M: Mt,

@@ -2,15 +2,15 @@
 // 章节内容在 handbook/ 目录，格式见 handbook/FORMAT.md。地址形如 handbook#gear/material。
 import { detectLang, saveLang, renderNav, TOOLS } from './site.js?v=dc76b3df';
 import ch01 from './handbook/01-overall.js?v=496f79b6';
-import ch02 from './handbook/02-belt.js?v=5fd42397';
+import ch02 from './handbook/02-belt.js?v=82aa3c30';
 import ch03 from './handbook/03-gear.js?v=88b685bf';
 import ch04 from './handbook/04-shaft.js?v=50a85daf';
 import ch05 from './handbook/05-bearing.js?v=6c491d20';
-import ch06 from './handbook/06-key-coupling.js?v=125832d3';
+import ch06 from './handbook/06-key-coupling.js?v=581c18d9';
 import ch07 from './handbook/07-housing.js?v=81d4e997';
 import ch08 from './handbook/08-lube-seal.js?v=132bc645';
 import ch09 from './handbook/09-tolerance.js?v=91c29e98';
-import ch10 from './handbook/10-fasteners.js?v=5b4ad264';
+import ch10 from './handbook/10-fasteners.js?v=db7c1844';
 
 const CHAPTERS = [ch01, ch02, ch03, ch04, ch05, ch06, ch07, ch08, ch09, ch10];
 
@@ -147,7 +147,8 @@ function renderSearch(q) {
 
 /* ---------- 正文 ---------- */
 function currentKey() {
-  const key = decodeURIComponent(location.hash.slice(1));
+  let key = '';
+  try { key = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* 地址里有非法编码（如 #%），回到第一节 */ }
   return FLAT.some((x) => x.key === key) ? key : FLAT[0]?.key || '';
 }
 

@@ -38,7 +38,8 @@ test('轴：基本偏差 j–u（下偏差 ei）', () => {
 
 test('轴：js 对称偏差及奇数取整', () => {
   assert.deepEqual(shaftLimits(25, 'js', 6), lim(6.5, -6.5));
-  assert.deepEqual(shaftLimits(25, 'js', 7), lim(10, -10)); // IT7 = 21 为奇数，取 20/2
+  assert.deepEqual(shaftLimits(25, 'js', 7), lim(10.5, -10.5)); // IT7 = 21，ISO 286-1:2010 直接 ±IT/2
+  assert.deepEqual(shaftLimits(25, 'js', 9), lim(26, -26));
 });
 
 test('轴：未定义的组合会报错', () => {
@@ -66,7 +67,24 @@ test('孔：J、K、M、N 及 Δ 特殊规则', () => {
   assert.deepEqual(holeLimits(25, 'N', 7), lim(-7, -28));
   assert.deepEqual(holeLimits(2, 'N', 9), lim(-4, -29));
   assert.deepEqual(holeLimits(5, 'N', 9), lim(0, -30));
-  assert.deepEqual(holeLimits(25, 'JS', 7), lim(10, -10));
+  assert.deepEqual(holeLimits(25, 'JS', 7), lim(10.5, -10.5));
+  // K 在 IT8 以上只对 ≤3 mm 有定义
+  assert.deepEqual(holeLimits(2, 'K', 9), lim(0, -25));
+  assert.throws(() => holeLimits(25, 'K', 9), { code: 'NOT_DEFINED' });
+});
+
+test('性质：所有已定义公差带的上下偏差之差等于 IT', () => {
+  for (const size of [2, 5, 25, 80, 250, 450]) {
+    for (const grade of [5, 6, 7, 8, 9, 11]) {
+      for (const [fn, letters] of [[shaftLimits, ['d', 'f', 'g', 'h', 'js', 'k', 'm', 'n', 'p', 'r', 's']], [holeLimits, ['D', 'F', 'G', 'H', 'JS', 'K', 'M', 'N', 'P', 'R', 'S']]]) {
+        for (const l of letters) {
+          let r;
+          try { r = fn(size, l, grade); } catch (e) { assert.equal(e.code, 'NOT_DEFINED'); continue; }
+          assert.ok(Math.abs(r.upper - r.lower - itValue(size, grade)) < 1e-9, `${l}${grade} @${size}`);
+        }
+      }
+    }
+  }
 });
 
 test('孔：P–U，≤IT7 加 Δ，>IT7 不加', () => {

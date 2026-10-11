@@ -133,8 +133,9 @@ export function shaftLimits(size, letter, grade) {
   const it = itValue(size, grade);
 
   if (letter === 'js') {
-    // IT7–IT11 的公差值为奇数时，取相邻较小的偶数再平分
-    const half = grade >= 7 && grade <= 11 && it % 2 === 1 ? (it - 1) / 2 : it / 2;
+    // ISO 286-1:2010（GB/T 1800.1—2020）：js 一律为 ±IT/2，奇数公差保留半微米。
+    // 1988 版「IT7–IT11 奇数先减 1 再平分」的规则已取消
+    const half = it / 2;
     return { upper: round(half), lower: round(-half) };
   }
   if (letter in SHAFT_ES) {
@@ -185,7 +186,8 @@ export function holeLimits(size, letter, grade) {
     if (special && grade < 3) throw notDefined(code, size);
     const d = special ? delta(size, grade) : 0;
     if (letter === 'K') {
-      // K 的特殊规则使用 k 在 IT4–IT7 时的值；IT8 以上 ES = 0
+      // K 的特殊规则使用 k 在 IT4–IT7 时的值；IT8 以上 ES = 0，但只对 ≤3 mm 有定义
+      if (grade > 8 && size > 3) throw notDefined(code, size);
       es = grade <= 8 ? round(-lookup(SHAFT_EI.k, size) + d) : 0;
     } else if (letter === 'M') {
       es = round(-lookup(SHAFT_EI.m, size) + d);

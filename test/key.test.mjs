@@ -124,3 +124,18 @@ test('非法输入报错', () => {
   assert.throws(() => checkKey({ ...ok, allow: 0 }), { code: 'ALLOW' });
   assert.throws(() => checkKey({ ...ok, b: 15, h: 9 }), { code: 'SIZE' });
 });
+
+test('性质：推荐的标准键长代回校核必须合格', () => {
+  // 审查反例：所需 L = 20.0014 mm，旧算法先舍入成 20.00 再选档，仍推荐 20 mm（代回 100.01 MPa 不合格）
+  const r = checkKey({ d: 25, T: 52.506125, L: 20, type: 'A', keys: 1, allow: 100 });
+  assert.equal(r.ok, false);
+  assert.equal(r.LStd.A, 22);
+  for (const [d, T, keys] of [[25, 52.506125, 1], [50, 500, 1], [50, 500, 2], [80, 1800, 1], [12, 9.7, 1]]) {
+    for (const type of ['A', 'B', 'C']) {
+      const a = checkKey({ d, T, L: 3 * selectKey(d).b, type, keys, allow: 100 });
+      if (a.LStd[type] == null) continue; // 超出键长系列
+      const b = checkKey({ d, T, L: a.LStd[type], type, keys, allow: 100 });
+      assert.ok(b.ok, `d=${d} T=${T} ${type} ×${keys}: L=${a.LStd[type]} σ=${b.sigma}`);
+    }
+  }
+});

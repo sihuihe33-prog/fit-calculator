@@ -16,7 +16,8 @@ const read = (f) => readFileSync(new URL(f, ROOT), 'utf8');
 const REF = /((?:src|href)="|from\s+'\.\/)((?:handbook\/)?[\w-]+\.(?:js|css))(?:\?v=[0-9a-f]+)?(["'])/g;
 
 // 指纹要包含被引用文件里的指纹，所以反复计算直到不再变化（依赖层数很浅，几轮就稳定）
-const hashOf = (text) => createHash('sha256').update(text.replace(/\?v=[0-9a-f]+/g, '')).digest('hex').slice(0, 8);
+// 先统一成 LF：Windows 工作区是 CRLF、仓库里是 LF，不统一的话同一文件在不同系统上算出的指纹不同
+const hashOf = (text) => createHash('sha256').update(text.replace(/\r\n/g, '\n').replace(/\?v=[0-9a-f]+/g, '')).digest('hex').slice(0, 8);
 let changed = new Set();
 for (let pass = 0; pass < 10; pass++) {
   const hashes = Object.fromEntries(files.filter((f) => !f.endsWith('.html')).map((f) => [f, null]));

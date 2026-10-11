@@ -2,7 +2,7 @@ import { renderNav } from './site.js?v=dc76b3df';
 import {
   Iso286Error, MAX_SIZE, SHAFT_LETTERS, HOLE_LETTERS, GRADES,
   parseFit, calcFit, PREFERRED_FITS,
-} from './iso286.js?v=6b551228';
+} from './iso286.js?v=e274a020';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {

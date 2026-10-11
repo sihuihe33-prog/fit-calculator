@@ -141,8 +141,9 @@ export function checkKey({ d, T, b, h, L, type = 'A', keys = 1, allow }) {
   const LReq = {};
   const LStd = {};
   for (const ty of KEY_TYPES) {
-    LReq[ty] = round(lengthFromWorking(ty, lReq, row.b), 2);
-    LStd[ty] = roundUpLength(LReq[ty]);
+    const Lr = lengthFromWorking(ty, lReq, row.b);
+    LReq[ty] = round(Lr, 2);
+    LStd[ty] = roundUpLength(Lr); // 用未舍入的值选档，舍入只用于显示
   }
 
   return {
