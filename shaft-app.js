@@ -2,7 +2,7 @@ import { detectLang, saveLang, renderNav } from './site.js?v=dc76b3df';
 import {
   ShaftError, MATERIALS, ALLOW_PRESETS, ALPHA_PRESETS,
   minDiameter, combinedCheck, keyForDiameter,
-} from './shaft.js?v=cf01e6a2';
+} from './shaft.js?v=8110db0c';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {
@@ -113,7 +113,7 @@ const I18N = {
       <p><code>τ<sub>T</sub> = T / W<sub>T</sub> ≈ T / (0.2 d³) ≤ [τ<sub>T</sub>]</code> &nbsp;⇒&nbsp; <code>d ≥ A<sub>0</sub> · ∛(P/n)</code> &nbsp;(mm), with <code>A<sub>0</sub> = ∛(9.55×10⁶ / (0.2 [τ<sub>T</sub>]))</code>.</p>
       <p>A reduced [τ<sub>T</sub>] (i.e. a larger A<sub>0</sub>) accounts for the bending that is not yet known at this stage. Hollow shaft: <code>d ≥ A<sub>0</sub> · ∛(P/n) · 1/∛(1 − β⁴)</code>, β = d<sub>i</sub>/d.</p>
       <table class="data"><thead><tr><th>Material</th><th>[τ<sub>T</sub>] (MPa)</th><th>A<sub>0</sub></th></tr></thead><tbody>
-        <tr><td>Q235-A, 20</td><td>15–25</td><td>149–126</td></tr>
+        <tr><td>Q235A, 20</td><td>15–25</td><td>149–126</td></tr>
         <tr><td>Q275, 35</td><td>20–35</td><td>135–112</td></tr>
         <tr><td>45</td><td>25–45</td><td>126–103</td></tr>
         <tr><td>40Cr, 35SiMn, 38SiMnMo, 3Cr13</td><td>35–55</td><td>112–97</td></tr>
@@ -240,7 +240,7 @@ const I18N = {
       <p><code>τ<sub>T</sub> = T / W<sub>T</sub> ≈ T / (0.2 d³) ≤ [τ<sub>T</sub>]</code> ⇒ <code>d ≥ A<sub>0</sub> · ∛(P/n)</code>（mm），其中 <code>A<sub>0</sub> = ∛(9.55×10⁶ / (0.2 [τ<sub>T</sub>]))</code>。</p>
       <p>此阶段弯矩尚未知，用降低的许用扭转切应力（即较大的 A<sub>0</sub>）来考虑弯矩的影响。空心轴：<code>d ≥ A<sub>0</sub> · ∛(P/n) · 1/∛(1 − β⁴)</code>，β = d<sub>i</sub>/d。</p>
       <table class="data"><thead><tr><th>轴的材料</th><th>[τ<sub>T</sub>] (MPa)</th><th>A<sub>0</sub></th></tr></thead><tbody>
-        <tr><td>Q235-A、20</td><td>15–25</td><td>149–126</td></tr>
+        <tr><td>Q235A、20</td><td>15–25</td><td>149–126</td></tr>
         <tr><td>Q275、35</td><td>20–35</td><td>135–112</td></tr>
         <tr><td>45</td><td>25–45</td><td>126–103</td></tr>
         <tr><td>40Cr、35SiMn、38SiMnMo、3Cr13</td><td>35–55</td><td>112–97</td></tr>

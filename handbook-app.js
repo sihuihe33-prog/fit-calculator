@@ -1,16 +1,16 @@
 // 设计手册页：左侧章节树 + 搜索，右侧显示一节内容。
 // 章节内容在 handbook/ 目录，格式见 handbook/FORMAT.md。地址形如 handbook#gear/material。
 import { detectLang, saveLang, renderNav, TOOLS } from './site.js?v=dc76b3df';
-import ch01 from './handbook/01-overall.js?v=e4bf9c1d';
-import ch02 from './handbook/02-belt.js?v=84f4726a';
-import ch03 from './handbook/03-gear.js?v=ff2e6fde';
-import ch04 from './handbook/04-shaft.js?v=a58009b0';
-import ch05 from './handbook/05-bearing.js?v=a19bd1ea';
-import ch06 from './handbook/06-key-coupling.js?v=8242a964';
+import ch01 from './handbook/01-overall.js?v=496f79b6';
+import ch02 from './handbook/02-belt.js?v=5fd42397';
+import ch03 from './handbook/03-gear.js?v=88b685bf';
+import ch04 from './handbook/04-shaft.js?v=50a85daf';
+import ch05 from './handbook/05-bearing.js?v=6c491d20';
+import ch06 from './handbook/06-key-coupling.js?v=125832d3';
 import ch07 from './handbook/07-housing.js?v=81d4e997';
 import ch08 from './handbook/08-lube-seal.js?v=132bc645';
-import ch09 from './handbook/09-tolerance.js?v=f22e0ebf';
-import ch10 from './handbook/10-fasteners.js?v=dbd10cef';
+import ch09 from './handbook/09-tolerance.js?v=91c29e98';
+import ch10 from './handbook/10-fasteners.js?v=5b4ad264';
 
 const CHAPTERS = [ch01, ch02, ch03, ch04, ch05, ch06, ch07, ch08, ch09, ch10];
 

@@ -14,15 +14,15 @@ export class ShaftError extends Error {
 
 // 教材表：轴常用材料的许用扭转切应力 [τT] 与系数 A0（A0 范围按"大 → 小"写，与 [τT] 小 → 大对应）
 export const MATERIALS = [
-  { id: 'q235', name: 'Q235-A, 20', nameZh: 'Q235-A、20', tau: [15, 25], A0: [149, 126] },
-  { id: 'q275', name: 'Q275, 35', nameZh: 'Q275、35', tau: [20, 35], A0: [135, 112] },
+  { id: 'q235', name: 'Q235A, 20', nameZh: 'Q235A、20', tau: [15, 25], A0: [149, 126] },
+  { id: 'q275', name: 'Q275, 35 (1Cr18Ni9Ti)', nameZh: 'Q275、35（1Cr18Ni9Ti）', tau: [20, 35], A0: [135, 112] },
   { id: 'c45', name: '45', nameZh: '45', tau: [25, 45], A0: [126, 103] },
   { id: 'cr40', name: '40Cr, 35SiMn, 38SiMnMo, 3Cr13', nameZh: '40Cr、35SiMn、38SiMnMo、3Cr13', tau: [35, 55], A0: [112, 97] },
 ];
 
 // 弯扭合成校核用的许用弯曲应力 [σ−1]（MPa）——教材表中的典型值，仅供参考，请以所用教材/手册为准
 export const ALLOW_PRESETS = [
-  { id: 'q235', allow: 40, name: 'Q235-A (hot-rolled)', nameZh: 'Q235-A（热轧）' },
+  { id: 'q235', allow: 40, name: 'Q235A (hot-rolled)', nameZh: 'Q235A（热轧）' },
   { id: '45n', allow: 55, name: '45 normalized', nameZh: '45 正火' },
   { id: '45qt', allow: 60, name: '45 quenched & tempered', nameZh: '45 调质' },
   { id: '40cr', allow: 70, name: '40Cr quenched & tempered', nameZh: '40Cr 调质' },
