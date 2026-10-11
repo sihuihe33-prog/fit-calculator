@@ -13,6 +13,9 @@ export const TOOLS = [
   { id: 'units', href: 'units', tag: 'SI', tagZh: 'SI', name: 'Unit Converter', nameZh: '单位换算', desc: 'Force, torque, stress, power, speed and more.', descZh: '力、扭矩、应力、功率、转速等工程单位。' },
 ];
 
+// 设计手册不是计算工具，单独列出：导航里排在「首页」后面，不计入工具数量
+export const HANDBOOK = { id: 'handbook', href: 'handbook', name: 'Handbook', nameZh: '设计手册' };
+
 export function detectLang() {
   try {
     const saved = localStorage.getItem(LANG_KEY);
@@ -35,7 +38,7 @@ function installSpeculation() {
   s.dataset.speculation = '';
   s.textContent = JSON.stringify({
     prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }],
-    prefetch: [{ urls: ['./', ...TOOLS.map((t) => t.href)], eagerness: 'eager' }],
+    prefetch: [{ urls: ['./', HANDBOOK.href, ...TOOLS.map((t) => t.href)], eagerness: 'eager' }],
   });
   document.head.append(s);
 }
@@ -47,7 +50,7 @@ export function renderNav(lang) {
   if (!nav) return;
   const current = document.body.dataset.tool || 'home';
   const zh = lang === 'zh';
-  const items = [{ id: 'home', href: './', name: 'Home', nameZh: '首页' }, ...TOOLS];
+  const items = [{ id: 'home', href: './', name: 'Home', nameZh: '首页' }, HANDBOOK, ...TOOLS];
   nav.setAttribute('aria-label', zh ? '工具' : 'Tools');
   nav.innerHTML = items
     .map((t) => `<a href="${t.href}"${t.id === current ? ' aria-current="page"' : ''}>${zh ? t.nameZh : t.name}</a>`)

@@ -1,4 +1,4 @@
-import { detectLang, saveLang, renderNav } from './site.js?v=bf0267f5';
+import { detectLang, saveLang, renderNav } from './site.js?v=dc76b3df';
 import {
   ShaftError, MATERIALS, ALLOW_PRESETS, ALPHA_PRESETS,
   minDiameter, combinedCheck, keyForDiameter,

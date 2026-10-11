@@ -1,5 +1,5 @@
 // 首页：按 site.js 的工具清单生成卡片目录
-import { TOOLS, detectLang, saveLang, renderNav } from './site.js?v=bf0267f5';
+import { TOOLS, detectLang, saveLang, renderNav } from './site.js?v=dc76b3df';
 
 const I18N = {
   en: {
@@ -13,6 +13,8 @@ const I18N = {
     stat2: 'GB · ISO · VDI',
     stat3: 'Runs in your browser',
     gridTitle: 'Tools',
+    hbTitle: 'Design Handbook (Chinese)',
+    hbDesc: 'Reference tables and step-by-step methods for undergraduate machine design and gear reducer course projects.',
     note: 'All calculations run locally in your browser. Values follow the cited standards and textbook methods — verify critical designs against the original sources.',
     footerText: 'Open source, runs entirely in your browser.',
     open: 'Open',
@@ -28,6 +30,8 @@ const I18N = {
     stat2: 'GB · ISO · VDI',
     stat3: '浏览器本地计算',
     gridTitle: '全部工具',
+    hbTitle: '设计手册',
+    hbDesc: '减速器课程设计常用资料：电动机、带传动、齿轮、轴、轴承、键与联轴器、箱体、润滑密封、公差配合、标准件，可搜索，配套计算器。',
     note: '所有计算都在你的浏览器本地完成。数值依据页面注明的标准和教材方法，关键设计请对照原始资料核实。',
     footerText: '开源，完全在浏览器中运行。',
     open: '打开',

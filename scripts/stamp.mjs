@@ -5,11 +5,15 @@ import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const ROOT = new URL('..', import.meta.url);
-const files = readdirSync(ROOT).filter((f) => /\.(html|js|css)$/.test(f));
+// 根目录的页面/脚本/样式，加上 handbook/ 目录里的手册章节（章节文件是纯数据，不再引用别的文件）
+const files = [
+  ...readdirSync(ROOT).filter((f) => /\.(html|js|css)$/.test(f)),
+  ...readdirSync(new URL('handbook/', ROOT)).filter((f) => f.endsWith('.js')).map((f) => 'handbook/' + f),
+];
 const read = (f) => readFileSync(new URL(f, ROOT), 'utf8');
 
 // 匹配 HTML 的 src="x.js" / href="x.css"，以及 JS 的 from './x.js'，已有的 ?v= 会被替换
-const REF = /((?:src|href)="|from\s+'\.\/)([\w-]+\.(?:js|css))(?:\?v=[0-9a-f]+)?(["'])/g;
+const REF = /((?:src|href)="|from\s+'\.\/)((?:handbook\/)?[\w-]+\.(?:js|css))(?:\?v=[0-9a-f]+)?(["'])/g;
 
 // 指纹要包含被引用文件里的指纹，所以反复计算直到不再变化（依赖层数很浅，几轮就稳定）
 const hashOf = (text) => createHash('sha256').update(text.replace(/\?v=[0-9a-f]+/g, '')).digest('hex').slice(0, 8);

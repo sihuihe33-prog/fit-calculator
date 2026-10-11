@@ -420,6 +420,37 @@ body[data-tool="home"] #site-nav { display: none; } /* 首页用卡片导航，�
   list-style: none; margin: 0 0 20px; padding: 0;
   display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
+/* 首页的设计手册入口横幅 */
+.hb-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--hole-fill), transparent 70%), var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color .15s, transform .15s;
+}
+.hb-banner:hover { border-color: var(--accent); transform: translateY(-1px); }
+.hb-banner-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.hb-banner-icon svg { width: 24px; height: 24px; }
+.hb-banner-body { flex: 1; min-width: 0; }
+.hb-banner-title { display: block; font-weight: 700; font-size: 1.05rem; }
+.hb-banner-desc { display: block; color: var(--muted); font-size: .88rem; line-height: 1.55; margin-top: 2px; }
+.hb-banner-go { flex: none; color: var(--accent); font-size: 1.3rem; transition: transform .15s; }
+.hb-banner:hover .hb-banner-go { transform: translateX(4px); }
+
 .tool-card {
   --tc: var(--c);
   position: relative; display: flex; flex-direction: column; gap: 8px; height: 100%;

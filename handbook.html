@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>机械设计手册 — 减速器课程设计常用资料</title>
+<meta name="description" content="面向本科机械设计课程与减速器课程设计的在线手册：总体设计、带传动、齿轮、轴、滚动轴承、键与联轴器、箱体、润滑密封、公差配合、常用标准件，表格可搜索，并可直接跳转到对应计算器。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="机械设计手册 — 减速器课程设计常用资料">
+<meta property="og:description" content="本科机械设计与减速器课程设计常用表格和方法，可搜索，配套计算器。">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=ecdf4efd">
+<link rel="stylesheet" href="handbook.css?v=d3aa9580">
+<script>
+  // 中文用户：在首次绘制前先隐藏页面，等脚本把文字换成中文后再显示，避免先闪一下英文
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem('fitcalc-lang'); } catch (e) {}
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+    if (l === 'zh') {
+      var h = document.documentElement;
+      h.classList.add('i18n-pending');
+      setTimeout(function () { h.classList.remove('i18n-pending'); }, 1500);
+    }
+  })();
+</script>
+<link rel="modulepreload" href="site.js?v=dc76b3df">
+<script type="module" blocking="render" src="handbook-app.js?v=5b918530"></script>
+</head>
+<body data-tool="handbook">
+<div class="wrap hb-wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><use href="favicon.svg#g"/></svg>
+      <div>
+        <h1 data-i18n="h1">设计手册</h1>
+        <p class="sub" data-i18n="subtitle">本科机械设计与减速器课程设计常用资料</p>
+      </div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" id="lang-zh" data-lang="zh" aria-pressed="true">中文</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="site-nav" aria-label="Tools"></nav>
+
+  <p class="hb-zh-only" id="hb-zh-only" hidden></p>
+
+  <div class="hb-layout">
+    <aside class="hb-side" aria-labelledby="hb-toc-h">
+      <h2 id="hb-toc-h" class="visually-hidden" data-i18n="toc">目录</h2>
+      <div class="hb-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="hb-q" type="search" autocomplete="off" placeholder="搜索手册">
+      </div>
+      <div class="hb-toc" id="hb-toc"></div>
+      <div class="hb-results" id="hb-results" hidden></div>
+    </aside>
+    <div class="hb-scrim" id="hb-scrim"></div>
+
+    <main class="hb-main">
+      <button type="button" class="hb-toc-btn" id="hb-toc-btn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span data-i18n="toc">目录</span>
+      </button>
+      <article class="card hb-article" id="hb-article"></article>
+    </main>
+  </div>
+
+  <footer class="foot">
+    <span data-i18n="footerText">开源项目，全部计算在浏览器本地完成。</span>
+    <a href="https://github.com/sihuihe33-prog/fit-calculator" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import { renderNav } from './site.js?v=bf0267f5';
+import { renderNav } from './site.js?v=dc76b3df';
 import {
   BoltError, THREADS, CLASSES, HEAD_TYPES, FRICTION_PRESETS, calcBolt,
 } from './bolt.js?v=8bda0b06';

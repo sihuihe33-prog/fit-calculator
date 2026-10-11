@@ -1,4 +1,4 @@
-import { detectLang, saveLang, renderNav } from './site.js?v=bf0267f5';
+import { detectLang, saveLang, renderNav } from './site.js?v=dc76b3df';
 import {
   KeyError, KEY_TABLE, LENGTHS, KEY_TYPES, ALLOW_PRESETS, DEFAULT_GAP,
   selectKey, torqueFromPower, suggestLength, checkKey,

@@ -1,4 +1,4 @@
-import { renderNav } from './site.js?v=bf0267f5';
+import { renderNav } from './site.js?v=dc76b3df';
 import {
   Iso286Error, MAX_SIZE, SHAFT_LETTERS, HOLE_LETTERS, GRADES,
   parseFit, calcFit, PREFERRED_FITS,
