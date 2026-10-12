@@ -71,6 +71,10 @@ test('孔：J、K、M、N 及 Δ 特殊规则', () => {
   // K 在 IT8 以上只对 ≤3 mm 有定义
   assert.deepEqual(holeLimits(2, 'K', 9), lim(0, -25));
   assert.throws(() => holeLimits(25, 'K', 9), { code: 'NOT_DEFINED' });
+  // 3 mm 两侧的边界：3 mm 属于「≤3」段仍有定义，略大于 3 mm 即未定义；IT8 在两侧都有定义
+  assert.deepEqual(holeLimits(3, 'K', 9), lim(0, -25));
+  assert.throws(() => holeLimits(3.001, 'K', 9), { code: 'NOT_DEFINED' });
+  assert.doesNotThrow(() => holeLimits(3.001, 'K', 8));
 });
 
 test('性质：所有已定义公差带的上下偏差之差等于 IT', () => {

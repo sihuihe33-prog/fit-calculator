@@ -55,7 +55,7 @@ Or use any static server, then open the printed URL. ES modules require http, no
 
 ## Cache busting
 
-Run `node scripts/stamp.mjs` before committing (the local pre-commit hook does this automatically). It appends a content hash (`?v=…`) to every local `.js` / `.css` reference so browsers never mix stale cached files with a new deploy.
+Run `node scripts/stamp.mjs` before committing (the local pre-commit hook does this automatically). It appends a content hash (`?v=…`) to every local `.js` / `.css` reference so a new deploy is never served from stale browser caches. CI (`.github/workflows/ci.yml`) runs the tests and fails if re-running the script would change any file. Note that the query string only changes the cache key: Pages always serves the latest file, so a page that is mid-load during a deploy could in theory mix versions.
 
 ## Deploy
 

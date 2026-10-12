@@ -1,0 +1,22 @@
+# 每次推送和拉取请求时自动检查：
+# 1) 全部单元测试通过；2) 提交进仓库的内容指纹（?v=）是最新的——重跑指纹脚本后工作区不应有任何改动
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: 单元测试
+        run: node --test "test/*.test.mjs"
+      - name: 内容指纹是否最新
+        run: |
+          node scripts/stamp.mjs
+          git diff --exit-code || { echo "指纹不是最新：请在本地运行 node scripts/stamp.mjs 后重新提交"; exit 1; }
