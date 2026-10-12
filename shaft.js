@@ -190,7 +190,7 @@ export function combinedCheck({ Mh, Mv, M, T, alpha, d, beta = 0, keyway = null,
     Wapprox: sec.Wapprox,
     sigma,
     util,
-    pass: sigma <= allow,
+    pass: sigma <= allow * (1 + 1e-12), // 只容忍浮点舍入误差，避免 dReq 代回时因末位误差判为不合格
     dReq,
   };
 }

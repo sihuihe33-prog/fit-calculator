@@ -147,9 +147,11 @@ test('性质：反算的最小直径代回校核必须合格', () => {
   // 审查反例：M=162 N·m、T=0、[σ−1]=60，旧算法给 30 mm，代回 61.1 MPa 不合格
   const r = combinedCheck({ M: 162e3, T: 0, alpha: 0.6, d: 40, allow: 60 });
   close(r.dReq, 30.1848, 0.001, 'dReq');
-  for (const [M, T, beta] of [[162e3, 0, 0], [200e3, 300e3, 0], [5e5, 8e5, 0.5], [1e4, 2e6, 0]]) {
+  // 复审反例：M=100 N·m 时 dReq 代回得 60.000000000000014 MPa，不能因浮点末位判为不合格
+  for (const [M, T, beta] of [[162e3, 0, 0], [100e3, 0, 0], [200e3, 300e3, 0], [5e5, 8e5, 0.5], [1e4, 2e6, 0]]) {
     const a = combinedCheck({ M, T, alpha: 0.6, d: 40, beta, allow: 60 });
     const b = combinedCheck({ M, T, alpha: 0.6, d: a.dReq, beta, allow: 60 });
     assert.ok(b.sigma <= 60 * (1 + 1e-9), `M=${M} T=${T} β=${beta}: σ=${b.sigma}`);
+    assert.equal(b.pass, true, `M=${M} T=${T} β=${beta}: pass`);
   }
 });

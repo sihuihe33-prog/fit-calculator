@@ -2,7 +2,7 @@ import { detectLang, saveLang, renderNav } from './site.js?v=dc76b3df';
 import {
   ShaftError, MATERIALS, ALLOW_PRESETS, ALPHA_PRESETS,
   minDiameter, combinedCheck, keyForDiameter,
-} from './shaft.js?v=67e0f249';
+} from './shaft.js?v=b156e384';
 
 /* ---------- 文案字典 ---------- */
 const I18N = {
